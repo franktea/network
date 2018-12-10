@@ -1,0 +1,67 @@
+@startuml
+
+class basic_socket
+class basic_io_object<service_type> #99FF99
+class basic_resolver
+class io_context #99FF99
+{
+void run()
+}
+class io_context::service #99FF99
+class service_base<T>
+class reactive_socket_service<Protocol>
+class execution_context_service_base
+{
+service_id<Type> id
+}
+class reactive_socket_service_base
+{
+reactor& reactor_
+}
+class deadline_timer_service<T>
+{
+timer_queue<Time_Traits> timer_queue_
+timer_scheduler& scheduler_
+}
+class basic_waitable_timer
+class scheduler
+{
+reactor* task_
+op_queue<operation> op_queue_
+void run()
+}
+class epoll_reactor
+{
+scheduler& scheduler_
+void run()
+void schedule_timer(...)
+}
+class timer_queue_base
+class timer_queue<Time_Traits>
+class basic_socket_acceptor
+
+basic_io_object <-- basic_socket
+basic_io_object : service_type service_
+basic_io_object <--  basic_resolver
+basic_io_object <-- basic_socket_acceptor
+reactive_socket_service_base <-- reactive_socket_service
+service_base <-- reactive_socket_service
+io_context::service <-- service_base
+io_context::service <-- execution_context_service_base
+service_base <-- deadline_timer_service
+basic_io_object <-- basic_waitable_timer
+execution_context_service_base <-- scheduler
+execution_context_service_base <-- epoll_reactor
+scheduler *..> epoll_reactor : reactor* task_
+epoll_reactor *..> scheduler : scheduler_
+deadline_timer_service *..> epoll_reactor : timer_scheduler& scheduler_
+reactive_socket_service_base *..> epoll_reactor : reactor_
+timer_queue_base <-- timer_queue
+deadline_timer_service *..> timer_queue: timer_queue_
+basic_waitable_timer ..> deadline_timer_service: service_
+io_context *..> scheduler : service_
+basic_socket ..> reactive_socket_service : service_
+basic_resolver ..> reactive_socket_service : service_
+basic_socket_acceptor ..> reactive_socket_service : service_
+epoll_reactor .. timer_queue : schedule_timer(timer_queue...)
+@enduml

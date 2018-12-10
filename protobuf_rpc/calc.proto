@@ -1,0 +1,13 @@
+option cc_generic_services = true;
+message CalcRequest {
+    required int32 a = 1;
+    required int32 b = 2;
+}
+message CalcResponse {
+    required int32 ret = 1;
+}
+service CalcService {
+    rpc Add(CalcRequest) returns (CalcResponse);
+    rpc Subtract(CalcRequest) returns (CalcResponse);
+    rpc Multiply(CalcRequest) returns (CalcResponse);
+}

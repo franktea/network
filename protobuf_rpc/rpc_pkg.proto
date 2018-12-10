@@ -1,0 +1,8 @@
+
+message RpcPackage
+{
+    required string service_name = 1;
+    required string method_name = 2;
+    required int32 pkg_size = 3;
+    required bytes pkg = 4;
+}

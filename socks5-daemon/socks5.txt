@@ -1,0 +1,26 @@
+@startuml
+hide footbox
+
+participant client as client
+participant "socks5 server" as local
+participant dest as dest
+
+client -> local: connect
+activate client
+activate local
+
+client ---> local: 05 01 00                  
+local -> client: 05 00
+
+client -> local: 05 01 00 01/03 ...
+local -> local: resolve host
+local -> dest: connect
+activate dest
+local -> client: 05 00 00 01 ...
+
+client -> local: request data
+local -> dest: request data
+dest -> local: response data
+local -> client: response data
+
+@enduml
