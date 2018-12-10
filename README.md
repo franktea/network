@@ -1,2 +1,4 @@
 # network
 asio examples
+
+inited
