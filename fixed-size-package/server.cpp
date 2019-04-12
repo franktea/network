@@ -105,6 +105,9 @@ public:
             }
             else
             {
+            	// 当打开的文件数超过系统限制时会运行到此处，意味着listen会停止、server在
+            	// 处理完所有的socket事件以后也会退出。
+            	// 为了能让server一直正常运行不退出，必须要保证允许建立的最大连接数小于系统的限制。
                 std::cerr<<"accept error, msg:"<<err.message()<<"\n";
             }
         });
