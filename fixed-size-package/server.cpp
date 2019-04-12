@@ -120,12 +120,12 @@ int main()
     asio::ip::tcp::endpoint ep(asio::ip::address::from_string("127.0.0.1"), 12345);
     Server server(io, ep);
     server.Start();
-        asio::error_code ec;
-        io.run(ec);
-        if(ec)
-        {
-            std::cerr<<"run() met an error, msg:"<<ec.message()<<"\n";
-        }
+    asio::error_code ec;
+    io.run(ec);
+    if(ec)
+    {
+        std::cerr<<"run() met an error, msg:"<<ec.message()<<"\n";
+    }
     return 0;
 }
 
