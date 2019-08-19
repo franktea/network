@@ -1,5 +1,5 @@
 # network
-simple network tools and samples wrote when learning asynchronous asio.
+学习asio的最多、最全、最简单的例子，功能与asio的examples不重叠。
 
 
 ## projects
