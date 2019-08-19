@@ -1,5 +1,5 @@
 # network
-学习asio的最多、最全、最简单的例子，功能与asio的examples不重叠。
+学习asio的最多、最全、最有用、最容易学会的例子，功能与asio的examples不重叠。
 
 
 ## projects
