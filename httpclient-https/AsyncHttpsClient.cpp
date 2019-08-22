@@ -7,98 +7,105 @@
 
 void AsyncHttpsClient::Start(ahc_callback cb)
 {
-	finish_callback_ = cb;
+    finish_callback_ = cb;
 
-	// parse url
-	std::regex re("(https?)://([^/]+)((/.*)*)");
-	std::smatch sm;
-	if(! std::regex_match(url_, sm, re))
-	{
-		err_ = "invalid url";
-		finish_callback_(shared_from_this());
-		return;
-	}
+    // parse url
+    std::regex re("(https?)://([^/]+)((/.*)*)");
+    std::smatch sm;
+    if (!std::regex_match(url_, sm, re))
+    {
+        err_ = "invalid url";
+        finish_callback_(shared_from_this());
+        return;
+    }
 
-	protocol_ = sm[1];
-	host_ = sm[2];
-	path_ = sm[3].str() == "" ? "/" : sm[3].str();
+    protocol_ = sm[1];
+    host_ = sm[2];
+    path_ = sm[3].str() == "" ? "/" : sm[3].str();
 
-	//std::cout<<"parsed, protocol="<<protocol_<<", host="<<host_<<", path="<<path_<<"\n";
+    //std::cout<<"parsed, protocol="<<protocol_<<", host="<<host_<<", path="<<path_<<"\n";
 
     // asynchronous resolve host name to ip address
-	auto self = shared_from_this();
-    resolver_.async_resolve(host_, protocol_, [this, self](const asio::error_code& error,
-    		  tcp::resolver::results_type results) {
-		if(! error)
-		{
-			//std::cout<<url_<<"finished resolving"<<"\n";
-			// connect to the server
-			socket_.set_verify_mode(asio::ssl::verify_peer);
-			socket_.set_verify_callback(std::bind(&AsyncHttpsClient::verify_certificate, this, _1, _2));
+    auto self = shared_from_this();
+    resolver_.async_resolve(host_, protocol_,
+            [this, self](const asio::error_code& error,
+                    tcp::resolver::results_type results)
+            {
+                if(! error)
+                {
+                    //std::cout<<url_<<"finished resolving"<<"\n";
+                    // connect to the server
+                    socket_.set_verify_mode(asio::ssl::verify_peer);
+                    socket_.set_verify_callback(std::bind(&AsyncHttpsClient::verify_certificate, this, _1, _2));
 
-			asio::async_connect(socket_.lowest_layer(), results, [this, self](const asio::error_code& error, const tcp::endpoint& endpoint) {
-				if(! error)
-				{
-					socket_.async_handshake(asio::ssl::stream_base::client, [this, self](const asio::error_code& error){
-						if(! error)
-						{
-							// succeeded to handshake, now send http request and receive response
-							request_.append("GET ").append(path_).append(" HTTP/1.1\r\n");
-							request_.append("Host: ").append(host_).append("\r\n");
-							request_.append("Accept: */*\r\n");
-							request_.append("Connection: Close\r\n\r\n");
+                    asio::async_connect(socket_.lowest_layer(), results, [this, self](const asio::error_code& error, const tcp::endpoint& endpoint)
+                            {
+                                if(! error)
+                                {
+                                    socket_.async_handshake(asio::ssl::stream_base::client, [this, self](const asio::error_code& error)
+                                            {
+                                                if(! error)
+                                                {
+                                                    // succeeded to handshake, now send http request and receive response
+                                                    request_.append("GET ").append(path_).append(" HTTP/1.1\r\n");
+                                                    request_.append("Host: ").append(host_).append("\r\n");
+                                                    request_.append("Accept: */*\r\n");
+                                                    request_.append("Connection: Close\r\n\r\n");
 
-							asio::async_write(socket_, asio::buffer(&request_[0], request_.size()), [this, self](const asio::error_code& error, size_t len) {
-								if(! error)
-								{
-									// read all data, until the server finish sending and close the socket
-									asio::async_read(socket_, asio::dynamic_buffer(response_), [this, self](const asio::error_code& error, size_t len) {
-										if(! error)
-										{
+                                                    asio::async_write(socket_, asio::buffer(&request_[0], request_.size()), [this, self](const asio::error_code& error, size_t len)
+                                                            {
+                                                                if(! error)
+                                                                {
+                                                                    // read all data, until the server finish sending and close the socket
+                                                                    asio::async_read(socket_, asio::dynamic_buffer(response_), [this, self](const asio::error_code& error, size_t len)
+                                                                            {
+                                                                                if(! error)
+                                                                                {
 
-										}
-										else if(error.value() != asio::error::eof)
-										{
-											err_ = error.message();
-										}
-										std::cout<<response_<<"\r\n\r\n";
-										finish_callback_(shared_from_this());
-									});
-								}
-								else
-								{
-									err_ = error.message();
-									finish_callback_(shared_from_this());
-								}
-							});
-						}
-						else
-						{
-							err_ = error.message();
-							finish_callback_(shared_from_this());
-						}
-					});
-				}
-				else
-				{
-					err_ = error.message();
-					finish_callback_(shared_from_this());
-				}
-			});
-		}
-		else
-		{
-			err_ = error.message();
-			finish_callback_(shared_from_this());
-		}
-    });
+                                                                                }
+                                                                                else if(error.value() != asio::error::eof)
+                                                                                {
+                                                                                    err_ = error.message();
+                                                                                }
+                                                                                std::cout<<response_<<"\r\n\r\n";
+                                                                                finish_callback_(shared_from_this());
+                                                                            });
+                                                                }
+                                                                else
+                                                                {
+                                                                    err_ = error.message();
+                                                                    finish_callback_(shared_from_this());
+                                                                }
+                                                            });
+                                                }
+                                                else
+                                                {
+                                                    err_ = error.message();
+                                                    finish_callback_(shared_from_this());
+                                                }
+                                            });
+                                }
+                                else
+                                {
+                                    err_ = error.message();
+                                    finish_callback_(shared_from_this());
+                                }
+                            });
+                }
+                else
+                {
+                    err_ = error.message();
+                    finish_callback_(shared_from_this());
+                }
+            });
 }
 
 int AsyncHttpsClient::Result()
 {
 }
 
-bool AsyncHttpsClient::verify_certificate(bool preverified, asio::ssl::verify_context& ctx)
+bool AsyncHttpsClient::verify_certificate(bool preverified,
+        asio::ssl::verify_context& ctx)
 {
     // The verify callback can be used to check whether the certificate that is
     // being presented is valid for the peer. For example, RFC 2818 describes

@@ -24,12 +24,8 @@ int main()
     MinimalController ctrl;
     CalcService_Stub stub(&channel);
     stub.Add(&ctrl, &request, &response, nullptr);
-    cout<<"ret="<<response.ret()<<"\n";
+    cout << "ret=" << response.ret() << "\n";
 
     return 0;
 }
-
-
-
-
 

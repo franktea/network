@@ -22,7 +22,8 @@ int main()
 
     // 方法3，等待信号
     asio::signal_set signals(ioc, SIGINT, SIGTERM);
-    signals.async_wait([&ioc](const std::error_code&, int signal) {
+    signals.async_wait([&ioc](const std::error_code&, int signal)
+    {
         std::cout<<"signal "<<signal<<"\n";
         ioc.stop();
     });
@@ -30,5 +31,4 @@ int main()
     ioc.run();
     return 0;
 }
-
 

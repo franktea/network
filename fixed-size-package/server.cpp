@@ -21,56 +21,61 @@ class Session: public std::enable_shared_from_this<Session>
 {
     friend class Server;
 public:
-    Session(asio::io_context& io_context): //io_context_(io_context),
-        socket_(io_context) {}
+    Session(asio::io_context& io_context) : //io_context_(io_context),
+            socket_(io_context)
+    {
+    }
     void Start()
     {
         auto self = shared_from_this();
         // recv from client
         asio::async_read(socket_, asio::buffer(&request_, sizeof(PkgHeader)),
-                [this, self](const asio::error_code& err, size_t len) {
-            if(err)
-            {
-                std::cerr<<"recv header err:"<<err.message()<<"\n";
-                socket_.close();
-                return;
-            }
-
-            // check if request body len is valid
-            if(request_.header.body_len > MAX_BODY_LEN)
-            {
-                std::cerr<<"body len too large: "<<request_.header.body_len<<"\n";
-                socket_.close();
-                return;
-            }
-
-            // recv body
-            asio::async_read(socket_, asio::buffer(&request_.body, request_.header.body_len),
-                    [self, this](const asio::error_code& err, size_t len) {
-                if(err)
+                [this, self](const asio::error_code& err, size_t len)
                 {
-                    std::cerr<<"recv body err:"<<err.message()<<"\n";
-                    socket_.close();
-                    return;
-                }
-
-                //receive ok, now process and send response to client
-                std::cout<<"recv pkg, body length: "<<request_.header.body_len<<"\n";
-                response_ = request_;
-                asio::async_write(socket_, asio::buffer(&response_, response_.header.body_len + sizeof(PkgHeader)),
-                        [self, this](const asio::error_code& err, size_t len) {
                     if(err)
                     {
-                        std::cerr<<"send err: "<<err.message()<<"\n";
+                        std::cerr<<"recv header err:"<<err.message()<<"\n";
                         socket_.close();
                         return;
                     }
 
-                    // send ok, just read next package
-                    Start();
+                    // check if request body len is valid
+                    if(request_.header.body_len > MAX_BODY_LEN)
+                    {
+                        std::cerr<<"body len too large: "<<request_.header.body_len<<"\n";
+                        socket_.close();
+                        return;
+                    }
+
+                    // recv body
+                    asio::async_read(socket_, asio::buffer(&request_.body, request_.header.body_len),
+                            [self, this](const asio::error_code& err, size_t len)
+                            {
+                                if(err)
+                                {
+                                    std::cerr<<"recv body err:"<<err.message()<<"\n";
+                                    socket_.close();
+                                    return;
+                                }
+
+                                //receive ok, now process and send response to client
+                                std::cout<<"recv pkg, body length: "<<request_.header.body_len<<"\n";
+                                response_ = request_;
+                                asio::async_write(socket_, asio::buffer(&response_, response_.header.body_len + sizeof(PkgHeader)),
+                                        [self, this](const asio::error_code& err, size_t len)
+                                        {
+                                            if(err)
+                                            {
+                                                std::cerr<<"send err: "<<err.message()<<"\n";
+                                                socket_.close();
+                                                return;
+                                            }
+
+                                            // send ok, just read next package
+                                            Start();
+                                        });
+                            });
                 });
-            });
-        });
     }
 private:
 //    asio::io_context& io_context_;
@@ -82,35 +87,40 @@ private:
 class Server
 {
 public:
-    Server(asio::io_context& ioc, const asio::ip::tcp::endpoint ep) : io_context_(ioc), acceptor_(ioc, ep) {};
+    Server(asio::io_context& ioc, const asio::ip::tcp::endpoint ep) :
+            io_context_(ioc), acceptor_(ioc, ep)
+    {
+    }
+    ;
     void Start()
     {
         auto p = std::make_shared<Session>(io_context_);
-        acceptor_.async_accept(p->socket_, [p, this](const asio::error_code& err)
-        {
-            if(! err)
-            {
-                std::cout<<"new conn, from ip:"<<p->socket_.remote_endpoint().address().to_string()<<"\n";
-
-                asio::error_code ec;
-                p->socket_.set_option(asio::socket_base::reuse_address(true), ec);
-                if(ec)
+        acceptor_.async_accept(p->socket_,
+                [p, this](const asio::error_code& err)
                 {
-                    std::cerr<<"set reuse error, message:"<<ec.message()<<"\n";
-                    return;
-                }
+                    if(! err)
+                    {
+                        std::cout<<"new conn, from ip:"<<p->socket_.remote_endpoint().address().to_string()<<"\n";
 
-                p->Start();
-                Start(); // listen for the next connection
-            }
-            else
-            {
-            	// 当打开的文件数超过系统限制时会运行到此处，意味着listen会停止、server在
-            	// 处理完所有的socket事件以后也会退出。
-            	// 为了能让server一直正常运行不退出，必须要保证允许建立的最大连接数小于系统的限制。
-                std::cerr<<"accept error, msg:"<<err.message()<<"\n";
-            }
-        });
+                        asio::error_code ec;
+                        p->socket_.set_option(asio::socket_base::reuse_address(true), ec);
+                        if(ec)
+                        {
+                            std::cerr<<"set reuse error, message:"<<ec.message()<<"\n";
+                            return;
+                        }
+
+                        p->Start();
+                        Start(); // listen for the next connection
+                    }
+                    else
+                    {
+                        // 当打开的文件数超过系统限制时会运行到此处，意味着listen会停止、server在
+                        // 处理完所有的socket事件以后也会退出。
+                        // 为了能让server一直正常运行不退出，必须要保证允许建立的最大连接数小于系统的限制。
+                        std::cerr<<"accept error, msg:"<<err.message()<<"\n";
+                    }
+                });
     }
 private:
     asio::io_context& io_context_;
@@ -120,16 +130,16 @@ private:
 int main()
 {
     asio::io_context io(1);
-    asio::ip::tcp::endpoint ep(asio::ip::address::from_string("127.0.0.1"), 12345);
+    asio::ip::tcp::endpoint ep(asio::ip::address::from_string("127.0.0.1"),
+            12345);
     Server server(io, ep);
     server.Start();
     asio::error_code ec;
     io.run(ec);
-    if(ec)
+    if (ec)
     {
-        std::cerr<<"run() met an error, msg:"<<ec.message()<<"\n";
+        std::cerr << "run() met an error, msg:" << ec.message() << "\n";
     }
     return 0;
 }
-
 

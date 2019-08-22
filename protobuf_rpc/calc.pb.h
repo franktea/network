@@ -28,7 +28,7 @@
 // @@protoc_insertion_point(includes)
 
 // Internal implementation detail -- do not call these.
-void  protobuf_AddDesc_calc_2eproto();
+void protobuf_AddDesc_calc_2eproto();
 void protobuf_AssignDesc_calc_2eproto();
 void protobuf_ShutdownFile_calc_2eproto();
 
@@ -37,300 +37,327 @@ class CalcResponse;
 
 // ===================================================================
 
-class CalcRequest : public ::google::protobuf::Message {
- public:
-  CalcRequest();
-  virtual ~CalcRequest();
+class CalcRequest: public ::google::protobuf::Message
+{
+public:
+    CalcRequest();
+    virtual ~CalcRequest();
 
-  CalcRequest(const CalcRequest& from);
+    CalcRequest(const CalcRequest& from);
 
-  inline CalcRequest& operator=(const CalcRequest& from) {
-    CopyFrom(from);
-    return *this;
-  }
+    inline CalcRequest& operator=(const CalcRequest& from)
+    {
+        CopyFrom(from);
+        return *this;
+    }
 
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
+    inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+    {
+        return _unknown_fields_;
+    }
 
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
+    inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+    {
+        return &_unknown_fields_;
+    }
 
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const CalcRequest& default_instance();
+    static const ::google::protobuf::Descriptor* descriptor();
+    static const CalcRequest& default_instance();
 
-  void Swap(CalcRequest* other);
+    void Swap(CalcRequest* other);
 
-  // implements Message ----------------------------------------------
+    // implements Message ----------------------------------------------
 
-  CalcRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const CalcRequest& from);
-  void MergeFrom(const CalcRequest& from);
-  void Clear();
-  bool IsInitialized() const;
+    CalcRequest* New() const;
+    void CopyFrom(const ::google::protobuf::Message& from);
+    void MergeFrom(const ::google::protobuf::Message& from);
+    void CopyFrom(const CalcRequest& from);
+    void MergeFrom(const CalcRequest& from);
+    void Clear();
+    bool IsInitialized() const;
 
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-  ::google::protobuf::Metadata GetMetadata() const;
+    int ByteSize() const;
+    bool MergePartialFromCodedStream(
+            ::google::protobuf::io::CodedInputStream* input);
+    void SerializeWithCachedSizes(
+            ::google::protobuf::io::CodedOutputStream* output) const;
+    ::google::protobuf::uint8* SerializeWithCachedSizesToArray(
+            ::google::protobuf::uint8* output) const;
+    int GetCachedSize() const
+    {
+        return _cached_size_;
+    }
+private:
+    void SharedCtor();
+    void SharedDtor();
+    void SetCachedSize(int size) const;
+public:
+    ::google::protobuf::Metadata GetMetadata() const;
 
-  // nested types ----------------------------------------------------
+    // nested types ----------------------------------------------------
 
-  // accessors -------------------------------------------------------
+    // accessors -------------------------------------------------------
 
-  // required int32 a = 1;
-  inline bool has_a() const;
-  inline void clear_a();
-  static const int kAFieldNumber = 1;
-  inline ::google::protobuf::int32 a() const;
-  inline void set_a(::google::protobuf::int32 value);
+    // required int32 a = 1;
+    inline bool has_a() const;
+    inline void clear_a();
+    static const int kAFieldNumber = 1;
+    inline ::google::protobuf::int32 a() const;
+    inline void set_a(::google::protobuf::int32 value);
 
-  // required int32 b = 2;
-  inline bool has_b() const;
-  inline void clear_b();
-  static const int kBFieldNumber = 2;
-  inline ::google::protobuf::int32 b() const;
-  inline void set_b(::google::protobuf::int32 value);
+    // required int32 b = 2;
+    inline bool has_b() const;
+    inline void clear_b();
+    static const int kBFieldNumber = 2;
+    inline ::google::protobuf::int32 b() const;
+    inline void set_b(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:CalcRequest)
- private:
-  inline void set_has_a();
-  inline void clear_has_a();
-  inline void set_has_b();
-  inline void clear_has_b();
+    // @@protoc_insertion_point(class_scope:CalcRequest)
+private:
+    inline void set_has_a();
+    inline void clear_has_a();
+    inline void set_has_b();
+    inline void clear_has_b();
 
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+    ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::uint32 _has_bits_[1];
-  mutable int _cached_size_;
-  ::google::protobuf::int32 a_;
-  ::google::protobuf::int32 b_;
-  friend void  protobuf_AddDesc_calc_2eproto();
-  friend void protobuf_AssignDesc_calc_2eproto();
-  friend void protobuf_ShutdownFile_calc_2eproto();
+    ::google::protobuf::uint32 _has_bits_[1];
+    mutable int _cached_size_;
+    ::google::protobuf::int32 a_;
+    ::google::protobuf::int32 b_;
+    friend void protobuf_AddDesc_calc_2eproto();
+    friend void protobuf_AssignDesc_calc_2eproto();
+    friend void protobuf_ShutdownFile_calc_2eproto();
 
-  void InitAsDefaultInstance();
-  static CalcRequest* default_instance_;
+    void InitAsDefaultInstance();
+    static CalcRequest* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class CalcResponse : public ::google::protobuf::Message {
- public:
-  CalcResponse();
-  virtual ~CalcResponse();
+class CalcResponse: public ::google::protobuf::Message
+{
+public:
+    CalcResponse();
+    virtual ~CalcResponse();
 
-  CalcResponse(const CalcResponse& from);
+    CalcResponse(const CalcResponse& from);
 
-  inline CalcResponse& operator=(const CalcResponse& from) {
-    CopyFrom(from);
-    return *this;
-  }
+    inline CalcResponse& operator=(const CalcResponse& from)
+    {
+        CopyFrom(from);
+        return *this;
+    }
 
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
+    inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+    {
+        return _unknown_fields_;
+    }
 
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
+    inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+    {
+        return &_unknown_fields_;
+    }
 
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const CalcResponse& default_instance();
+    static const ::google::protobuf::Descriptor* descriptor();
+    static const CalcResponse& default_instance();
 
-  void Swap(CalcResponse* other);
+    void Swap(CalcResponse* other);
 
-  // implements Message ----------------------------------------------
+    // implements Message ----------------------------------------------
 
-  CalcResponse* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const CalcResponse& from);
-  void MergeFrom(const CalcResponse& from);
-  void Clear();
-  bool IsInitialized() const;
+    CalcResponse* New() const;
+    void CopyFrom(const ::google::protobuf::Message& from);
+    void MergeFrom(const ::google::protobuf::Message& from);
+    void CopyFrom(const CalcResponse& from);
+    void MergeFrom(const CalcResponse& from);
+    void Clear();
+    bool IsInitialized() const;
 
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-  ::google::protobuf::Metadata GetMetadata() const;
+    int ByteSize() const;
+    bool MergePartialFromCodedStream(
+            ::google::protobuf::io::CodedInputStream* input);
+    void SerializeWithCachedSizes(
+            ::google::protobuf::io::CodedOutputStream* output) const;
+    ::google::protobuf::uint8* SerializeWithCachedSizesToArray(
+            ::google::protobuf::uint8* output) const;
+    int GetCachedSize() const
+    {
+        return _cached_size_;
+    }
+private:
+    void SharedCtor();
+    void SharedDtor();
+    void SetCachedSize(int size) const;
+public:
+    ::google::protobuf::Metadata GetMetadata() const;
 
-  // nested types ----------------------------------------------------
+    // nested types ----------------------------------------------------
 
-  // accessors -------------------------------------------------------
+    // accessors -------------------------------------------------------
 
-  // required int32 ret = 1;
-  inline bool has_ret() const;
-  inline void clear_ret();
-  static const int kRetFieldNumber = 1;
-  inline ::google::protobuf::int32 ret() const;
-  inline void set_ret(::google::protobuf::int32 value);
+    // required int32 ret = 1;
+    inline bool has_ret() const;
+    inline void clear_ret();
+    static const int kRetFieldNumber = 1;
+    inline ::google::protobuf::int32 ret() const;
+    inline void set_ret(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:CalcResponse)
- private:
-  inline void set_has_ret();
-  inline void clear_has_ret();
+    // @@protoc_insertion_point(class_scope:CalcResponse)
+private:
+    inline void set_has_ret();
+    inline void clear_has_ret();
 
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+    ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::uint32 _has_bits_[1];
-  mutable int _cached_size_;
-  ::google::protobuf::int32 ret_;
-  friend void  protobuf_AddDesc_calc_2eproto();
-  friend void protobuf_AssignDesc_calc_2eproto();
-  friend void protobuf_ShutdownFile_calc_2eproto();
+    ::google::protobuf::uint32 _has_bits_[1];
+    mutable int _cached_size_;
+    ::google::protobuf::int32 ret_;
+    friend void protobuf_AddDesc_calc_2eproto();
+    friend void protobuf_AssignDesc_calc_2eproto();
+    friend void protobuf_ShutdownFile_calc_2eproto();
 
-  void InitAsDefaultInstance();
-  static CalcResponse* default_instance_;
+    void InitAsDefaultInstance();
+    static CalcResponse* default_instance_;
 };
 // ===================================================================
 
 class CalcService_Stub;
 
-class CalcService : public ::google::protobuf::Service {
- protected:
-  // This class should be treated as an abstract interface.
-  inline CalcService() {};
- public:
-  virtual ~CalcService();
+class CalcService: public ::google::protobuf::Service
+{
+protected:
+    // This class should be treated as an abstract interface.
+    inline CalcService()
+    {
+    }
+    ;
+public:
+    virtual ~CalcService();
 
-  typedef CalcService_Stub Stub;
+    typedef CalcService_Stub Stub;
 
-  static const ::google::protobuf::ServiceDescriptor* descriptor();
+    static const ::google::protobuf::ServiceDescriptor* descriptor();
 
-  virtual void Add(::google::protobuf::RpcController* controller,
-                       const ::CalcRequest* request,
-                       ::CalcResponse* response,
-                       ::google::protobuf::Closure* done);
-  virtual void Subtract(::google::protobuf::RpcController* controller,
-                       const ::CalcRequest* request,
-                       ::CalcResponse* response,
-                       ::google::protobuf::Closure* done);
-  virtual void Multiply(::google::protobuf::RpcController* controller,
-                       const ::CalcRequest* request,
-                       ::CalcResponse* response,
-                       ::google::protobuf::Closure* done);
+    virtual void Add(::google::protobuf::RpcController* controller,
+            const ::CalcRequest* request, ::CalcResponse* response,
+            ::google::protobuf::Closure* done);
+    virtual void Subtract(::google::protobuf::RpcController* controller,
+            const ::CalcRequest* request, ::CalcResponse* response,
+            ::google::protobuf::Closure* done);
+    virtual void Multiply(::google::protobuf::RpcController* controller,
+            const ::CalcRequest* request, ::CalcResponse* response,
+            ::google::protobuf::Closure* done);
 
-  // implements Service ----------------------------------------------
+    // implements Service ----------------------------------------------
 
-  const ::google::protobuf::ServiceDescriptor* GetDescriptor();
-  void CallMethod(const ::google::protobuf::MethodDescriptor* method,
-                  ::google::protobuf::RpcController* controller,
-                  const ::google::protobuf::Message* request,
-                  ::google::protobuf::Message* response,
-                  ::google::protobuf::Closure* done);
-  const ::google::protobuf::Message& GetRequestPrototype(
-    const ::google::protobuf::MethodDescriptor* method) const;
-  const ::google::protobuf::Message& GetResponsePrototype(
-    const ::google::protobuf::MethodDescriptor* method) const;
+    const ::google::protobuf::ServiceDescriptor* GetDescriptor();
+    void CallMethod(const ::google::protobuf::MethodDescriptor* method,
+            ::google::protobuf::RpcController* controller,
+            const ::google::protobuf::Message* request,
+            ::google::protobuf::Message* response,
+            ::google::protobuf::Closure* done);
+    const ::google::protobuf::Message& GetRequestPrototype(
+            const ::google::protobuf::MethodDescriptor* method) const;
+    const ::google::protobuf::Message& GetResponsePrototype(
+            const ::google::protobuf::MethodDescriptor* method) const;
 
- private:
-  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(CalcService);
+private:
+    GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(CalcService);
 };
 
-class CalcService_Stub : public CalcService {
- public:
-  CalcService_Stub(::google::protobuf::RpcChannel* channel);
-  CalcService_Stub(::google::protobuf::RpcChannel* channel,
-                   ::google::protobuf::Service::ChannelOwnership ownership);
-  ~CalcService_Stub();
+class CalcService_Stub: public CalcService
+{
+public:
+    CalcService_Stub(::google::protobuf::RpcChannel* channel);
+    CalcService_Stub(::google::protobuf::RpcChannel* channel,
+            ::google::protobuf::Service::ChannelOwnership ownership);
+    ~CalcService_Stub();
 
-  inline ::google::protobuf::RpcChannel* channel() { return channel_; }
+    inline ::google::protobuf::RpcChannel* channel()
+    {
+        return channel_;
+    }
 
-  // implements CalcService ------------------------------------------
+    // implements CalcService ------------------------------------------
 
-  void Add(::google::protobuf::RpcController* controller,
-                       const ::CalcRequest* request,
-                       ::CalcResponse* response,
-                       ::google::protobuf::Closure* done);
-  void Subtract(::google::protobuf::RpcController* controller,
-                       const ::CalcRequest* request,
-                       ::CalcResponse* response,
-                       ::google::protobuf::Closure* done);
-  void Multiply(::google::protobuf::RpcController* controller,
-                       const ::CalcRequest* request,
-                       ::CalcResponse* response,
-                       ::google::protobuf::Closure* done);
- private:
-  ::google::protobuf::RpcChannel* channel_;
-  bool owns_channel_;
-  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(CalcService_Stub);
+    void Add(::google::protobuf::RpcController* controller,
+            const ::CalcRequest* request, ::CalcResponse* response,
+            ::google::protobuf::Closure* done);
+    void Subtract(::google::protobuf::RpcController* controller,
+            const ::CalcRequest* request, ::CalcResponse* response,
+            ::google::protobuf::Closure* done);
+    void Multiply(::google::protobuf::RpcController* controller,
+            const ::CalcRequest* request, ::CalcResponse* response,
+            ::google::protobuf::Closure* done);
+private:
+    ::google::protobuf::RpcChannel* channel_;
+    bool owns_channel_;GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(CalcService_Stub);
 };
-
 
 // ===================================================================
-
 
 // ===================================================================
 
 // CalcRequest
 
 // required int32 a = 1;
-inline bool CalcRequest::has_a() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
+inline bool CalcRequest::has_a() const
+{
+    return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void CalcRequest::set_has_a() {
-  _has_bits_[0] |= 0x00000001u;
+inline void CalcRequest::set_has_a()
+{
+    _has_bits_[0] |= 0x00000001u;
 }
-inline void CalcRequest::clear_has_a() {
-  _has_bits_[0] &= ~0x00000001u;
+inline void CalcRequest::clear_has_a()
+{
+    _has_bits_[0] &= ~0x00000001u;
 }
-inline void CalcRequest::clear_a() {
-  a_ = 0;
-  clear_has_a();
+inline void CalcRequest::clear_a()
+{
+    a_ = 0;
+    clear_has_a();
 }
-inline ::google::protobuf::int32 CalcRequest::a() const {
-  // @@protoc_insertion_point(field_get:CalcRequest.a)
-  return a_;
+inline ::google::protobuf::int32 CalcRequest::a() const
+{
+    // @@protoc_insertion_point(field_get:CalcRequest.a)
+    return a_;
 }
-inline void CalcRequest::set_a(::google::protobuf::int32 value) {
-  set_has_a();
-  a_ = value;
-  // @@protoc_insertion_point(field_set:CalcRequest.a)
+inline void CalcRequest::set_a(::google::protobuf::int32 value)
+{
+    set_has_a();
+    a_ = value;
+    // @@protoc_insertion_point(field_set:CalcRequest.a)
 }
 
 // required int32 b = 2;
-inline bool CalcRequest::has_b() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+inline bool CalcRequest::has_b() const
+{
+    return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void CalcRequest::set_has_b() {
-  _has_bits_[0] |= 0x00000002u;
+inline void CalcRequest::set_has_b()
+{
+    _has_bits_[0] |= 0x00000002u;
 }
-inline void CalcRequest::clear_has_b() {
-  _has_bits_[0] &= ~0x00000002u;
+inline void CalcRequest::clear_has_b()
+{
+    _has_bits_[0] &= ~0x00000002u;
 }
-inline void CalcRequest::clear_b() {
-  b_ = 0;
-  clear_has_b();
+inline void CalcRequest::clear_b()
+{
+    b_ = 0;
+    clear_has_b();
 }
-inline ::google::protobuf::int32 CalcRequest::b() const {
-  // @@protoc_insertion_point(field_get:CalcRequest.b)
-  return b_;
+inline ::google::protobuf::int32 CalcRequest::b() const
+{
+    // @@protoc_insertion_point(field_get:CalcRequest.b)
+    return b_;
 }
-inline void CalcRequest::set_b(::google::protobuf::int32 value) {
-  set_has_b();
-  b_ = value;
-  // @@protoc_insertion_point(field_set:CalcRequest.b)
+inline void CalcRequest::set_b(::google::protobuf::int32 value)
+{
+    set_has_b();
+    b_ = value;
+    // @@protoc_insertion_point(field_set:CalcRequest.b)
 }
 
 // -------------------------------------------------------------------
@@ -338,36 +365,42 @@ inline void CalcRequest::set_b(::google::protobuf::int32 value) {
 // CalcResponse
 
 // required int32 ret = 1;
-inline bool CalcResponse::has_ret() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
+inline bool CalcResponse::has_ret() const
+{
+    return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void CalcResponse::set_has_ret() {
-  _has_bits_[0] |= 0x00000001u;
+inline void CalcResponse::set_has_ret()
+{
+    _has_bits_[0] |= 0x00000001u;
 }
-inline void CalcResponse::clear_has_ret() {
-  _has_bits_[0] &= ~0x00000001u;
+inline void CalcResponse::clear_has_ret()
+{
+    _has_bits_[0] &= ~0x00000001u;
 }
-inline void CalcResponse::clear_ret() {
-  ret_ = 0;
-  clear_has_ret();
+inline void CalcResponse::clear_ret()
+{
+    ret_ = 0;
+    clear_has_ret();
 }
-inline ::google::protobuf::int32 CalcResponse::ret() const {
-  // @@protoc_insertion_point(field_get:CalcResponse.ret)
-  return ret_;
+inline ::google::protobuf::int32 CalcResponse::ret() const
+{
+    // @@protoc_insertion_point(field_get:CalcResponse.ret)
+    return ret_;
 }
-inline void CalcResponse::set_ret(::google::protobuf::int32 value) {
-  set_has_ret();
-  ret_ = value;
-  // @@protoc_insertion_point(field_set:CalcResponse.ret)
+inline void CalcResponse::set_ret(::google::protobuf::int32 value)
+{
+    set_has_ret();
+    ret_ = value;
+    // @@protoc_insertion_point(field_set:CalcResponse.ret)
 }
-
 
 // @@protoc_insertion_point(namespace_scope)
 
 #ifndef SWIG
-namespace google {
-namespace protobuf {
-
+namespace google
+{
+namespace protobuf
+{
 
 }  // namespace google
 }  // namespace protobuf

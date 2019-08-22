@@ -11,25 +11,22 @@ class ConcreateCalcService: public CalcService
 {
 public:
     void Add(::google::protobuf::RpcController* controller,
-                         const ::CalcRequest* request,
-                         ::CalcResponse* response,
-                         ::google::protobuf::Closure* done) override
+            const ::CalcRequest* request, ::CalcResponse* response,
+            ::google::protobuf::Closure* done) override
     {
         response->set_ret(request->a() + request->b());
         done->Run();
     }
     void Subtract(::google::protobuf::RpcController* controller,
-                         const ::CalcRequest* request,
-                         ::CalcResponse* response,
-                         ::google::protobuf::Closure* done) override
+            const ::CalcRequest* request, ::CalcResponse* response,
+            ::google::protobuf::Closure* done) override
     {
         response->set_ret(request->a() - request->b());
         done->Run();
     }
     void Multiply(::google::protobuf::RpcController* controller,
-                         const ::CalcRequest* request,
-                         ::CalcResponse* response,
-                         ::google::protobuf::Closure* done) override
+            const ::CalcRequest* request, ::CalcResponse* response,
+            ::google::protobuf::Closure* done) override
     {
         response->set_ret(request->a() * request->b());
         done->Run();
@@ -44,5 +41,4 @@ int main()
     server.Start();
     return 0;
 }
-
 

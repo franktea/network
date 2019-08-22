@@ -16,84 +16,96 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
-namespace {
+namespace
+{
 
 const ::google::protobuf::Descriptor* RpcPackage_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  RpcPackage_reflection_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection* RpcPackage_reflection_ =
+        NULL;
 
 }  // namespace
 
-
-void protobuf_AssignDesc_rpc_5fpkg_2eproto() {
-  protobuf_AddDesc_rpc_5fpkg_2eproto();
-  const ::google::protobuf::FileDescriptor* file =
-    ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
-      "rpc_pkg.proto");
-  GOOGLE_CHECK(file != NULL);
-  RpcPackage_descriptor_ = file->message_type(0);
-  static const int RpcPackage_offsets_[4] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RpcPackage, service_name_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RpcPackage, method_name_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RpcPackage, pkg_size_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RpcPackage, pkg_),
-  };
-  RpcPackage_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      RpcPackage_descriptor_,
-      RpcPackage::default_instance_,
-      RpcPackage_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RpcPackage, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RpcPackage, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(RpcPackage));
+void protobuf_AssignDesc_rpc_5fpkg_2eproto()
+{
+    protobuf_AddDesc_rpc_5fpkg_2eproto();
+    const ::google::protobuf::FileDescriptor* file =
+            ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
+                    "rpc_pkg.proto");
+    GOOGLE_CHECK(file != NULL);
+    RpcPackage_descriptor_ = file->message_type(0);
+    static const int RpcPackage_offsets_[4] =
+    { GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RpcPackage, service_name_),
+            GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RpcPackage,
+                    method_name_),
+            GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RpcPackage,
+                    pkg_size_), GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(
+                    RpcPackage, pkg_), };
+    RpcPackage_reflection_ =
+            new ::google::protobuf::internal::GeneratedMessageReflection(
+                    RpcPackage_descriptor_, RpcPackage::default_instance_,
+                    RpcPackage_offsets_,
+                    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RpcPackage,
+                            _has_bits_[0]),
+                    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RpcPackage,
+                            _unknown_fields_), -1,
+                    ::google::protobuf::DescriptorPool::generated_pool(),
+                    ::google::protobuf::MessageFactory::generated_factory(),
+                    sizeof(RpcPackage));
 }
 
-namespace {
+namespace
+{
 
-GOOGLE_PROTOBUF_DECLARE_ONCE(protobuf_AssignDescriptors_once_);
-inline void protobuf_AssignDescriptorsOnce() {
-  ::google::protobuf::GoogleOnceInit(&protobuf_AssignDescriptors_once_,
-                 &protobuf_AssignDesc_rpc_5fpkg_2eproto);
+GOOGLE_PROTOBUF_DECLARE_ONCE (protobuf_AssignDescriptors_once_);
+inline void protobuf_AssignDescriptorsOnce()
+{
+    ::google::protobuf::GoogleOnceInit(&protobuf_AssignDescriptors_once_,
+            &protobuf_AssignDesc_rpc_5fpkg_2eproto);
 }
 
-void protobuf_RegisterTypes(const ::std::string&) {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    RpcPackage_descriptor_, &RpcPackage::default_instance());
+void protobuf_RegisterTypes(const ::std::string&)
+{
+    protobuf_AssignDescriptorsOnce();
+    ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+            RpcPackage_descriptor_, &RpcPackage::default_instance());
 }
 
 }  // namespace
 
-void protobuf_ShutdownFile_rpc_5fpkg_2eproto() {
-  delete RpcPackage::default_instance_;
-  delete RpcPackage_reflection_;
+void protobuf_ShutdownFile_rpc_5fpkg_2eproto()
+{
+    delete RpcPackage::default_instance_;
+    delete RpcPackage_reflection_;
 }
 
-void protobuf_AddDesc_rpc_5fpkg_2eproto() {
-  static bool already_here = false;
-  if (already_here) return;
-  already_here = true;
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
+void protobuf_AddDesc_rpc_5fpkg_2eproto()
+{
+    static bool already_here = false;
+    if (already_here)
+        return;
+    already_here = true;
+    GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\rrpc_pkg.proto\"V\n\nRpcPackage\022\024\n\014service"
-    "_name\030\001 \002(\t\022\023\n\013method_name\030\002 \002(\t\022\020\n\010pkg_"
-    "size\030\003 \002(\005\022\013\n\003pkg\030\004 \002(\014", 103);
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
-    "rpc_pkg.proto", &protobuf_RegisterTypes);
-  RpcPackage::default_instance_ = new RpcPackage();
-  RpcPackage::default_instance_->InitAsDefaultInstance();
-  ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_rpc_5fpkg_2eproto);
+    ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
+            "\n\rrpc_pkg.proto\"V\n\nRpcPackage\022\024\n\014service"
+                    "_name\030\001 \002(\t\022\023\n\013method_name\030\002 \002(\t\022\020\n\010pkg_"
+                    "size\030\003 \002(\005\022\013\n\003pkg\030\004 \002(\014",
+            103);
+    ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
+            "rpc_pkg.proto", &protobuf_RegisterTypes);
+    RpcPackage::default_instance_ = new RpcPackage();
+    RpcPackage::default_instance_->InitAsDefaultInstance();
+    ::google::protobuf::internal::OnShutdown(
+            &protobuf_ShutdownFile_rpc_5fpkg_2eproto);
 }
 
 // Force AddDescriptors() to be called at static initialization time.
-struct StaticDescriptorInitializer_rpc_5fpkg_2eproto {
-  StaticDescriptorInitializer_rpc_5fpkg_2eproto() {
-    protobuf_AddDesc_rpc_5fpkg_2eproto();
-  }
+struct StaticDescriptorInitializer_rpc_5fpkg_2eproto
+{
+    StaticDescriptorInitializer_rpc_5fpkg_2eproto()
+    {
+        protobuf_AddDesc_rpc_5fpkg_2eproto();
+    }
 } static_descriptor_initializer_rpc_5fpkg_2eproto_;
 
 // ===================================================================
@@ -105,387 +117,495 @@ const int RpcPackage::kPkgSizeFieldNumber;
 const int RpcPackage::kPkgFieldNumber;
 #endif  // !_MSC_VER
 
-RpcPackage::RpcPackage()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:RpcPackage)
+RpcPackage::RpcPackage() :
+        ::google::protobuf::Message()
+{
+    SharedCtor();
+    // @@protoc_insertion_point(constructor:RpcPackage)
 }
 
-void RpcPackage::InitAsDefaultInstance() {
+void RpcPackage::InitAsDefaultInstance()
+{
 }
 
-RpcPackage::RpcPackage(const RpcPackage& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:RpcPackage)
+RpcPackage::RpcPackage(const RpcPackage& from) :
+        ::google::protobuf::Message()
+{
+    SharedCtor();
+    MergeFrom(from);
+    // @@protoc_insertion_point(copy_constructor:RpcPackage)
 }
 
-void RpcPackage::SharedCtor() {
-  ::google::protobuf::internal::GetEmptyString();
-  _cached_size_ = 0;
-  service_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  method_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  pkg_size_ = 0;
-  pkg_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+void RpcPackage::SharedCtor()
+{
+    ::google::protobuf::internal::GetEmptyString();
+    _cached_size_ = 0;
+    service_name_ =
+            const_cast<::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    method_name_ =
+            const_cast<::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    pkg_size_ = 0;
+    pkg_ =
+            const_cast<::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-RpcPackage::~RpcPackage() {
-  // @@protoc_insertion_point(destructor:RpcPackage)
-  SharedDtor();
+RpcPackage::~RpcPackage()
+{
+    // @@protoc_insertion_point(destructor:RpcPackage)
+    SharedDtor();
 }
 
-void RpcPackage::SharedDtor() {
-  if (service_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete service_name_;
-  }
-  if (method_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete method_name_;
-  }
-  if (pkg_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete pkg_;
-  }
-  if (this != default_instance_) {
-  }
+void RpcPackage::SharedDtor()
+{
+    if (service_name_
+            != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+    {
+        delete service_name_;
+    }
+    if (method_name_
+            != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+    {
+        delete method_name_;
+    }
+    if (pkg_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+    {
+        delete pkg_;
+    }
+    if (this != default_instance_)
+    {
+    }
 }
 
-void RpcPackage::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+void RpcPackage::SetCachedSize(int size) const
+{
+    GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+    _cached_size_ = size;
+    GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* RpcPackage::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return RpcPackage_descriptor_;
+const ::google::protobuf::Descriptor* RpcPackage::descriptor()
+{
+    protobuf_AssignDescriptorsOnce();
+    return RpcPackage_descriptor_;
 }
 
-const RpcPackage& RpcPackage::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_rpc_5fpkg_2eproto();
-  return *default_instance_;
+const RpcPackage& RpcPackage::default_instance()
+{
+    if (default_instance_ == NULL)
+        protobuf_AddDesc_rpc_5fpkg_2eproto();
+    return *default_instance_;
 }
 
 RpcPackage* RpcPackage::default_instance_ = NULL;
 
-RpcPackage* RpcPackage::New() const {
-  return new RpcPackage;
+RpcPackage* RpcPackage::New() const
+{
+    return new RpcPackage;
 }
 
-void RpcPackage::Clear() {
-  if (_has_bits_[0 / 32] & 15) {
-    if (has_service_name()) {
-      if (service_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        service_name_->clear();
-      }
+void RpcPackage::Clear()
+{
+    if (_has_bits_[0 / 32] & 15)
+    {
+        if (has_service_name())
+        {
+            if (service_name_
+                    != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+            {
+                service_name_->clear();
+            }
+        }
+        if (has_method_name())
+        {
+            if (method_name_
+                    != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+            {
+                method_name_->clear();
+            }
+        }
+        pkg_size_ = 0;
+        if (has_pkg())
+        {
+            if (pkg_
+                    != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+            {
+                pkg_->clear();
+            }
+        }
     }
-    if (has_method_name()) {
-      if (method_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        method_name_->clear();
-      }
-    }
-    pkg_size_ = 0;
-    if (has_pkg()) {
-      if (pkg_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        pkg_->clear();
-      }
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
+    ::memset(_has_bits_, 0, sizeof(_has_bits_));
+    mutable_unknown_fields()->Clear();
 }
 
 bool RpcPackage::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
+        ::google::protobuf::io::CodedInputStream* input)
+{
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:RpcPackage)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string service_name = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_service_name()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->service_name().data(), this->service_name().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "service_name");
-        } else {
-          goto handle_unusual;
+    ::google::protobuf::uint32 tag;
+    // @@protoc_insertion_point(parse_start:RpcPackage)
+    for (;;)
+    {
+        ::std::pair<::google::protobuf::uint32, bool> p =
+                input->ReadTagWithCutoff(127);
+        tag = p.first;
+        if (!p.second)
+            goto handle_unusual;
+        switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(
+                tag))
+        {
+        // required string service_name = 1;
+        case 1:
+        {
+            if (tag == 10)
+            {
+                DO_(
+                        ::google::protobuf::internal::WireFormatLite::ReadString(
+                                input, this->mutable_service_name()));
+                ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+                        this->service_name().data(),
+                        this->service_name().length(),
+                        ::google::protobuf::internal::WireFormat::PARSE,
+                        "service_name");
+            }
+            else
+            {
+                goto handle_unusual;
+            }
+            if (input->ExpectTag(18))
+                goto parse_method_name;
+            break;
         }
-        if (input->ExpectTag(18)) goto parse_method_name;
-        break;
-      }
 
-      // required string method_name = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_method_name:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_method_name()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->method_name().data(), this->method_name().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "method_name");
-        } else {
-          goto handle_unusual;
+            // required string method_name = 2;
+        case 2:
+        {
+            if (tag == 18)
+            {
+                parse_method_name:
+                DO_(
+                        ::google::protobuf::internal::WireFormatLite::ReadString(
+                                input, this->mutable_method_name()));
+                ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+                        this->method_name().data(),
+                        this->method_name().length(),
+                        ::google::protobuf::internal::WireFormat::PARSE,
+                        "method_name");
+            }
+            else
+            {
+                goto handle_unusual;
+            }
+            if (input->ExpectTag(24))
+                goto parse_pkg_size;
+            break;
         }
-        if (input->ExpectTag(24)) goto parse_pkg_size;
-        break;
-      }
 
-      // required int32 pkg_size = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_pkg_size:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &pkg_size_)));
-          set_has_pkg_size();
-        } else {
-          goto handle_unusual;
+            // required int32 pkg_size = 3;
+        case 3:
+        {
+            if (tag == 24)
+            {
+                parse_pkg_size:
+                DO_(
+                        (::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                                ::google::protobuf::int32,
+                                ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                                input, &pkg_size_)));
+                set_has_pkg_size();
+            }
+            else
+            {
+                goto handle_unusual;
+            }
+            if (input->ExpectTag(34))
+                goto parse_pkg;
+            break;
         }
-        if (input->ExpectTag(34)) goto parse_pkg;
-        break;
-      }
 
-      // required bytes pkg = 4;
-      case 4: {
-        if (tag == 34) {
-         parse_pkg:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_pkg()));
-        } else {
-          goto handle_unusual;
+            // required bytes pkg = 4;
+        case 4:
+        {
+            if (tag == 34)
+            {
+                parse_pkg:
+                DO_(
+                        ::google::protobuf::internal::WireFormatLite::ReadBytes(
+                                input, this->mutable_pkg()));
+            }
+            else
+            {
+                goto handle_unusual;
+            }
+            if (input->ExpectAtEnd())
+                goto success;
+            break;
         }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
+        default:
+        {
+            handle_unusual: if (tag == 0
+                    || ::google::protobuf::internal::WireFormatLite::GetTagWireType(
+                            tag)
+                            == ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+            {
+                goto success;
+            }
+            DO_(
+                    ::google::protobuf::internal::WireFormat::SkipField(input,
+                            tag, mutable_unknown_fields()));
+            break;
         }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
+        }
     }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:RpcPackage)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:RpcPackage)
-  return false;
+    success:
+    // @@protoc_insertion_point(parse_success:RpcPackage)
+    return true;
+    failure:
+    // @@protoc_insertion_point(parse_failure:RpcPackage)
+    return false;
 #undef DO_
 }
 
 void RpcPackage::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:RpcPackage)
-  // required string service_name = 1;
-  if (has_service_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->service_name().data(), this->service_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "service_name");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      1, this->service_name(), output);
-  }
-
-  // required string method_name = 2;
-  if (has_method_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->method_name().data(), this->method_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "method_name");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      2, this->method_name(), output);
-  }
-
-  // required int32 pkg_size = 3;
-  if (has_pkg_size()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->pkg_size(), output);
-  }
-
-  // required bytes pkg = 4;
-  if (has_pkg()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      4, this->pkg(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:RpcPackage)
-}
-
-::google::protobuf::uint8* RpcPackage::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:RpcPackage)
-  // required string service_name = 1;
-  if (has_service_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->service_name().data(), this->service_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "service_name");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->service_name(), target);
-  }
-
-  // required string method_name = 2;
-  if (has_method_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->method_name().data(), this->method_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "method_name");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->method_name(), target);
-  }
-
-  // required int32 pkg_size = 3;
-  if (has_pkg_size()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->pkg_size(), target);
-  }
-
-  // required bytes pkg = 4;
-  if (has_pkg()) {
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        4, this->pkg(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:RpcPackage)
-  return target;
-}
-
-int RpcPackage::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+        ::google::protobuf::io::CodedOutputStream* output) const
+{
+    // @@protoc_insertion_point(serialize_start:RpcPackage)
     // required string service_name = 1;
-    if (has_service_name()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->service_name());
+    if (has_service_name())
+    {
+        ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+                this->service_name().data(), this->service_name().length(),
+                ::google::protobuf::internal::WireFormat::SERIALIZE,
+                "service_name");
+        ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(1,
+                this->service_name(), output);
     }
 
     // required string method_name = 2;
-    if (has_method_name()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->method_name());
+    if (has_method_name())
+    {
+        ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+                this->method_name().data(), this->method_name().length(),
+                ::google::protobuf::internal::WireFormat::SERIALIZE,
+                "method_name");
+        ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(2,
+                this->method_name(), output);
     }
 
     // required int32 pkg_size = 3;
-    if (has_pkg_size()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->pkg_size());
+    if (has_pkg_size())
+    {
+        ::google::protobuf::internal::WireFormatLite::WriteInt32(3,
+                this->pkg_size(), output);
     }
 
     // required bytes pkg = 4;
-    if (has_pkg()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->pkg());
+    if (has_pkg())
+    {
+        ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(4,
+                this->pkg(), output);
     }
 
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void RpcPackage::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const RpcPackage* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const RpcPackage*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void RpcPackage::MergeFrom(const RpcPackage& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_service_name()) {
-      set_service_name(from.service_name());
+    if (!unknown_fields().empty())
+    {
+        ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+                unknown_fields(), output);
     }
-    if (from.has_method_name()) {
-      set_method_name(from.method_name());
+    // @@protoc_insertion_point(serialize_end:RpcPackage)
+}
+
+::google::protobuf::uint8* RpcPackage::SerializeWithCachedSizesToArray(
+        ::google::protobuf::uint8* target) const
+{
+    // @@protoc_insertion_point(serialize_to_array_start:RpcPackage)
+    // required string service_name = 1;
+    if (has_service_name())
+    {
+        ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+                this->service_name().data(), this->service_name().length(),
+                ::google::protobuf::internal::WireFormat::SERIALIZE,
+                "service_name");
+        target =
+                ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+                        1, this->service_name(), target);
     }
-    if (from.has_pkg_size()) {
-      set_pkg_size(from.pkg_size());
+
+    // required string method_name = 2;
+    if (has_method_name())
+    {
+        ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+                this->method_name().data(), this->method_name().length(),
+                ::google::protobuf::internal::WireFormat::SERIALIZE,
+                "method_name");
+        target =
+                ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+                        2, this->method_name(), target);
     }
-    if (from.has_pkg()) {
-      set_pkg(from.pkg());
+
+    // required int32 pkg_size = 3;
+    if (has_pkg_size())
+    {
+        target =
+                ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(
+                        3, this->pkg_size(), target);
     }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+
+    // required bytes pkg = 4;
+    if (has_pkg())
+    {
+        target =
+                ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+                        4, this->pkg(), target);
+    }
+
+    if (!unknown_fields().empty())
+    {
+        target =
+                ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+                        unknown_fields(), target);
+    }
+    // @@protoc_insertion_point(serialize_to_array_end:RpcPackage)
+    return target;
 }
 
-void RpcPackage::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+int RpcPackage::ByteSize() const
+{
+    int total_size = 0;
+
+    if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+    {
+        // required string service_name = 1;
+        if (has_service_name())
+        {
+            total_size += 1
+                    + ::google::protobuf::internal::WireFormatLite::StringSize(
+                            this->service_name());
+        }
+
+        // required string method_name = 2;
+        if (has_method_name())
+        {
+            total_size += 1
+                    + ::google::protobuf::internal::WireFormatLite::StringSize(
+                            this->method_name());
+        }
+
+        // required int32 pkg_size = 3;
+        if (has_pkg_size())
+        {
+            total_size += 1
+                    + ::google::protobuf::internal::WireFormatLite::Int32Size(
+                            this->pkg_size());
+        }
+
+        // required bytes pkg = 4;
+        if (has_pkg())
+        {
+            total_size += 1
+                    + ::google::protobuf::internal::WireFormatLite::BytesSize(
+                            this->pkg());
+        }
+
+    }
+    if (!unknown_fields().empty())
+    {
+        total_size +=
+                ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+                        unknown_fields());
+    }
+    GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+    _cached_size_ = total_size;
+    GOOGLE_SAFE_CONCURRENT_WRITES_END();
+    return total_size;
 }
 
-void RpcPackage::CopyFrom(const RpcPackage& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+void RpcPackage::MergeFrom(const ::google::protobuf::Message& from)
+{
+    GOOGLE_CHECK_NE(&from, this);
+    const RpcPackage* source =
+            ::google::protobuf::internal::dynamic_cast_if_available<
+                    const RpcPackage*>(&from);
+    if (source == NULL)
+    {
+        ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+    }
+    else
+    {
+        MergeFrom(*source);
+    }
 }
 
-bool RpcPackage::IsInitialized() const {
-  if ((_has_bits_[0] & 0x0000000f) != 0x0000000f) return false;
-
-  return true;
+void RpcPackage::MergeFrom(const RpcPackage& from)
+{
+    GOOGLE_CHECK_NE(&from, this);
+    if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+    {
+        if (from.has_service_name())
+        {
+            set_service_name(from.service_name());
+        }
+        if (from.has_method_name())
+        {
+            set_method_name(from.method_name());
+        }
+        if (from.has_pkg_size())
+        {
+            set_pkg_size(from.pkg_size());
+        }
+        if (from.has_pkg())
+        {
+            set_pkg(from.pkg());
+        }
+    }
+    mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void RpcPackage::Swap(RpcPackage* other) {
-  if (other != this) {
-    std::swap(service_name_, other->service_name_);
-    std::swap(method_name_, other->method_name_);
-    std::swap(pkg_size_, other->pkg_size_);
-    std::swap(pkg_, other->pkg_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+void RpcPackage::CopyFrom(const ::google::protobuf::Message& from)
+{
+    if (&from == this)
+        return;
+    Clear();
+    MergeFrom(from);
 }
 
-::google::protobuf::Metadata RpcPackage::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = RpcPackage_descriptor_;
-  metadata.reflection = RpcPackage_reflection_;
-  return metadata;
+void RpcPackage::CopyFrom(const RpcPackage& from)
+{
+    if (&from == this)
+        return;
+    Clear();
+    MergeFrom(from);
 }
 
+bool RpcPackage::IsInitialized() const
+{
+    if ((_has_bits_[0] & 0x0000000f) != 0x0000000f)
+        return false;
+
+    return true;
+}
+
+void RpcPackage::Swap(RpcPackage* other)
+{
+    if (other != this)
+    {
+        std::swap(service_name_, other->service_name_);
+        std::swap(method_name_, other->method_name_);
+        std::swap(pkg_size_, other->pkg_size_);
+        std::swap(pkg_, other->pkg_);
+        std::swap(_has_bits_[0], other->_has_bits_[0]);
+        _unknown_fields_.Swap(&other->_unknown_fields_);
+        std::swap(_cached_size_, other->_cached_size_);
+    }
+}
+
+::google::protobuf::Metadata RpcPackage::GetMetadata() const
+{
+    protobuf_AssignDescriptorsOnce();
+    ::google::protobuf::Metadata metadata;
+    metadata.descriptor = RpcPackage_descriptor_;
+    metadata.reflection = RpcPackage_reflection_;
+    return metadata;
+}
 
 // @@protoc_insertion_point(namespace_scope)
 

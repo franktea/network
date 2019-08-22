@@ -11,14 +11,14 @@
 
 int main()
 {
-	asio::io_context io;
-	asio::steady_timer t(io, std::chrono::seconds(10));
-	t.async_wait([](const asio::error_code&) { std::cout<<"fire after 10 sec.\n"; } );
-	asio::steady_timer t2(io, std::chrono::seconds(5));
-	t2.async_wait([](const asio::error_code&) { std::cout<<"fire after 5 sec.\n"; } );
-	io.run();
-	return 0;
+    asio::io_context io;
+    asio::steady_timer t(io, std::chrono::seconds(10));
+    t.async_wait([](const asio::error_code&)
+    {   std::cout<<"fire after 10 sec.\n";});
+    asio::steady_timer t2(io, std::chrono::seconds(5));
+    t2.async_wait([](const asio::error_code&)
+    {   std::cout<<"fire after 5 sec.\n";});
+    io.run();
+    return 0;
 }
-
-
 
