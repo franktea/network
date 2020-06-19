@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "*.ipp": "cpp",
+        "__mutex_base": "cpp",
+        "condition_variable": "cpp",
+        "mutex": "cpp",
+        "thread": "cpp",
+        "__config": "cpp",
+        "fstream": "cpp",
+        "locale": "cpp",
+        "__functional_base": "cpp",
+        "__functional_03": "cpp",
+        "functional": "cpp"
+    }
+}
