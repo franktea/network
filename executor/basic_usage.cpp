@@ -12,7 +12,7 @@ int main()
 {
     // 用法1：直接post
     //asio::post([](){asio::system_executor(), std::cout<<"hello world\n"; });
-    asio::system_executor().post([](){ std::cout<<"hello world\n"; });
+    asio::post([](){ std::cout<<"hello world\n"; });
 
     // 用法2：post到thread pool中去
     asio::thread_pool pool;
