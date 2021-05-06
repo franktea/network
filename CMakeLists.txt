@@ -1,5 +1,6 @@
+cmake_minimum_required(VERSION 3.19)
+
 project(network)
-cmake_minimum_required(VERSION 2.8)
 
 set(CMAKE_CXX_FLAGS "-g -O2 -std=c++11 -DASIO_STANDALONE -Werror")
 
