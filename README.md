@@ -1,6 +1,14 @@
 # network
 学习asio的最多、最全、最有用、最容易学会的例子，功能与asio的examples不重叠。
 
+```
+git clone --recursive https://github.com/franktea/network.git;
+cd network;
+mkdir -p build;
+cmake ..;
+make
+```
+
 
 ## projects
 
