@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.19)
 
 project(network)
 
-set(CMAKE_CXX_STANDARD 17)
-add_compile_options("-DASIO_STANDALONE")
+set(CMAKE_CXX_STANDARD 14)
+add_compile_options(-DASIO_STANDALONE)
 
 if (MSVC)
-    add_compile_options("/EHsc")
+    add_compile_options(/EHsc)
 else()
-    add_compile_options("-g -O2 -Werror")
+    add_compile_options(-g -O2 -Werror)
 endif()
 
 set(ASIO_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/asio/asio/include)
