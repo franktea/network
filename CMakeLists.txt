@@ -7,6 +7,7 @@ add_compile_options(-DASIO_STANDALONE)
 
 if (MSVC)
     add_compile_options(/EHsc)
+    add_compile_definitions(_WIN32_WINNT=0x0A00)
 else()
     add_compile_options(-g -O2 -Werror)
 endif()
