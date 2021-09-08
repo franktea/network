@@ -6,6 +6,7 @@
  */
 
 #include <map>
+#include <functional>
 
 #include "response_parser.h"
 
@@ -136,7 +137,7 @@ ParseResult BulkString::Feed(char c)
     switch (status_)
     {
     case BULK_STATUS::BS_EXPECT_LENGTH:
-        if (c == '-' or std::isdigit(c))
+        if (c == '-' || std::isdigit(c))
         {
             length_line_.push_back(c);
         }
