@@ -16,8 +16,16 @@ FetchContent_Declare(asio
 FetchContent_Populate(asio)
 include_directories(${asio_SOURCE_DIR}/asio/include/)
 
+include(FetchContent)
+FetchContent_Declare(
+        ut
+        GIT_REPOSITORY https://github.com/boost-ext/ut.git
+        GIT_TAG        v1.1.8
+)
+FetchContent_MakeAvailable(ut)
+
 set(ASIO_INCLUDE_DIR ${asio_SOURCE_DIR}/asio/include/)
-set(CATCH_SINGLE_INCLUDE ${PROJECT_SOURCE_DIR}/3rdparty/unit_test) # for unit test
+set(ut_SINGLE_INCLUDE ${ut_SOURCE_DIR}/include) # for unit test
 set(BINARY_OUTPUT_DIR ${PROJECT_SOURCE_DIR}/bin)
 
 add_subdirectory(timer-performance)

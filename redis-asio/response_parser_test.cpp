@@ -8,21 +8,18 @@
 
 #include <string>
 
-// Let Catch provide main():
-#define CATCH_CONFIG_MAIN
-
-#include "catch2/catch.hpp"
+#include <boost/ut.hpp>
 
 using std::string;
+using namespace boost::ut;
 
 class StringParser
 {
 public:
-    void ParseString(const string& s)
+    void ParseString(const string &s)
     {
         for (size_t i = 0;
-                i < s.size() && pr_ != ParseResult::PR_FINISHED
-                        && pr_ != ParseResult::PR_ERROR; ++i)
+             i < s.size() && pr_ != ParseResult::PR_FINISHED && pr_ != ParseResult::PR_ERROR; ++i)
         {
             if (!item_)
             {
@@ -38,110 +35,111 @@ public:
     ParseResult pr_ = ParseResult::PR_INIT;
 };
 
-// test simple string
-TEST_CASE("test simple string")
+int main()
 {
-    string s = "+OK\r\n";
-    StringParser sp;
-    sp.ParseString(s);
-    REQUIRE(sp.pr_ == ParseResult::PR_FINISHED);
-    REQUIRE(sp.item_->ToString() == "OK");
-}
-
-// test resp error
-TEST_CASE("test resp error")
-{
-    string s = "-Error message\r\n";
-    StringParser sp;
-    sp.ParseString(s);
-    REQUIRE(sp.pr_ == ParseResult::PR_FINISHED);
-    REQUIRE(sp.item_->ToString() == "(error) Error message");
-}
-
-// test resp integer
-TEST_CASE("test resp integer")
-{
-    string s = ":-1000\r\n";
-    StringParser sp;
-    sp.ParseString(s);
-    REQUIRE(sp.pr_ == ParseResult::PR_FINISHED);
-    REQUIRE(sp.item_->ToString() == "(integer) -1000");
-}
-
-// resp bulk strings
-TEST_CASE("test bulk string")
-{
+    // test simple string
+    "test simple string"_test = []
     {
-        string s = "$6\r\nfoobar\r\n";
+        string s = "+OK\r\n";
         StringParser sp;
         sp.ParseString(s);
-        REQUIRE(sp.pr_ == ParseResult::PR_FINISHED);
-        REQUIRE(sp.item_->ToString() == "\"foobar\"");
-    }
+        expect(sp.pr_ == ParseResult::PR_FINISHED);
+        expect(sp.item_->ToString() == "OK");
+    };
 
+    // test resp error
+    "test resp error"_test = []
     {
-        string s = "$-1\r\n";
+        string s = "-Error message\r\n";
         StringParser sp;
         sp.ParseString(s);
-        REQUIRE(sp.pr_ == ParseResult::PR_FINISHED);
-        REQUIRE(sp.item_->ToString() == "(nil)");
-    }
-}
+        expect(sp.pr_ == ParseResult::PR_FINISHED);
+        expect(sp.item_->ToString() == "(error) Error message");
+    };
 
-// test resp array
-TEST_CASE("test resp array")
-{
-    { // empty array
-        string s = "*0\r\n";
+    // test resp integer
+    "test resp integer"_test = []
+    {
+        string s = ":-1000\r\n";
         StringParser sp;
         sp.ParseString(s);
-        REQUIRE(sp.pr_ == ParseResult::PR_FINISHED);
-        REQUIRE(sp.item_->ToString() == "[]");
-    }
+        expect(sp.pr_ == ParseResult::PR_FINISHED);
+        expect(sp.item_->ToString() == "(integer) -1000");
+    };
 
-    { // complicate array
-        string s = "*5\r\n"
-                ":1\r\n"
-                ":2\r\n"
-                ":3\r\n"
-                ":4\r\n"
-                "$6\r\n"
-                "foobar\r\n";
-        StringParser sp;
-        sp.ParseString(s);
-        REQUIRE(sp.pr_ == ParseResult::PR_FINISHED);
-        REQUIRE(
-                sp.item_->ToString()
-                        == "[(integer) 1, (integer) 2, (integer) 3, (integer) 4, \"foobar\"]");
-    }
+    // resp bulk strings
+    "test bulk string"_test = []
+    {
+        {
+            string s = "$6\r\nfoobar\r\n";
+            StringParser sp;
+            sp.ParseString(s);
+            expect(sp.pr_ == ParseResult::PR_FINISHED);
+            expect(sp.item_->ToString() == "\"foobar\"");
+        }
 
-    { // arrays of arrays
-        string s = "*2\r\n"
-                "*3\r\n"
-                ":1\r\n"
-                ":2\r\n"
-                ":3\r\n"
-                "*2\r\n"
-                "+Foo\r\n"
-                "-Bar\r\n";
-        StringParser sp;
-        sp.ParseString(s);
-        REQUIRE(sp.pr_ == ParseResult::PR_FINISHED);
-        REQUIRE(
-                sp.item_->ToString()
-                        == "[[(integer) 1, (integer) 2, (integer) 3], [Foo, (error) Bar]]");
-    }
+        {
+            string s = "$-1\r\n";
+            StringParser sp;
+            sp.ParseString(s);
+            expect(sp.pr_ == ParseResult::PR_FINISHED);
+            expect(sp.item_->ToString() == "(nil)");
+        }
+    };
 
-    { // null element in arrays
-        string s = "*3\r\n"
-                "$3\r\n"
-                "foo\r\n"
-                "$-1\r\n"
-                "$3\r\n"
-                "bar\r\n";
-        StringParser sp;
-        sp.ParseString(s);
-        REQUIRE(sp.pr_ == ParseResult::PR_FINISHED);
-        REQUIRE(sp.item_->ToString() == "[\"foo\", (nil), \"bar\"]");
-    }
+    // test resp array
+    "test resp array"_test = []
+    {
+        { // empty array
+            string s = "*0\r\n";
+            StringParser sp;
+            sp.ParseString(s);
+            expect(sp.pr_ == ParseResult::PR_FINISHED);
+            expect(sp.item_->ToString() == "[]");
+        }
+
+        { // complicate array
+            string s = "*5\r\n"
+                       ":1\r\n"
+                       ":2\r\n"
+                       ":3\r\n"
+                       ":4\r\n"
+                       "$6\r\n"
+                       "foobar\r\n";
+            StringParser sp;
+            sp.ParseString(s);
+            expect(sp.pr_ == ParseResult::PR_FINISHED);
+            expect(
+                sp.item_->ToString() == "[(integer) 1, (integer) 2, (integer) 3, (integer) 4, \"foobar\"]");
+        }
+
+        { // arrays of arrays
+            string s = "*2\r\n"
+                       "*3\r\n"
+                       ":1\r\n"
+                       ":2\r\n"
+                       ":3\r\n"
+                       "*2\r\n"
+                       "+Foo\r\n"
+                       "-Bar\r\n";
+            StringParser sp;
+            sp.ParseString(s);
+            expect(sp.pr_ == ParseResult::PR_FINISHED);
+            expect(
+                sp.item_->ToString() == "[[(integer) 1, (integer) 2, (integer) 3], [Foo, (error) Bar]]");
+        }
+
+        { // null element in arrays
+            string s = "*3\r\n"
+                       "$3\r\n"
+                       "foo\r\n"
+                       "$-1\r\n"
+                       "$3\r\n"
+                       "bar\r\n";
+            StringParser sp;
+            sp.ParseString(s);
+            expect(sp.pr_ == ParseResult::PR_FINISHED);
+            expect(sp.item_->ToString() == "[\"foo\", (nil), \"bar\"]");
+        }
+    };
 }

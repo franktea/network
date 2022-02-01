@@ -12,5 +12,5 @@ target_link_libraries(mt-redis-cli pthread)
 target_include_directories(general-redis-cli PRIVATE ${ASIO_INCLUDE_DIR})
 target_link_libraries(general-redis-cli pthread)
 
-target_include_directories(protocol_parser_test PRIVATE ${ASIO_INCLUDE_DIR} ${CATCH_SINGLE_INCLUDE})
+target_include_directories(protocol_parser_test PRIVATE ${ASIO_INCLUDE_DIR} ${ut_SINGLE_INCLUDE})
 target_link_libraries(protocol_parser_test pthread)
