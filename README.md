@@ -35,3 +35,5 @@ make
 **echo_client** async echo client, which is not included in asio examples
 
 **asio_libcurl** demonstrate how to integrate asio with libcurl, the old example is kinda too old, and has some bugs.
+
+**use_awaitable_as_default** demonstrate how to eliminate writing use_awaitable everytime.
