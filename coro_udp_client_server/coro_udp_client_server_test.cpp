@@ -16,7 +16,7 @@ int main()
 
     const int times = 100000; // 收发次数
 
-    // client 发送N次数据
+    // 一个协程，client 发送N次数据
     auto client = std::make_shared<AsyncUdpClient>(io_context, ep_server);    
     auto sending = [client]() -> awaitable<void> {
         for(int i = 0; i < times; ++i) {
@@ -25,7 +25,7 @@ int main()
     };
     co_spawn(io_context, sending(), detached);
 
-    // server 接收N次数据
+    // 另一个协程，server 接收N次数据
     auto server = std::make_shared<AsyncUdpServer>(io_context, ep_server);
     auto recving = [server]() -> awaitable<void> {
         for(int i = 0; i < times; ++i) {
