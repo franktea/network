@@ -1,8 +1,8 @@
-project(async_udp_client)
+project(coro_udp_client_server)
 
-add_executable(async_udp_client async_udp_client_test.cpp)
+add_executable(coro_udp_client_server_test coro_udp_client_server_test.cpp)
 
 set(EXECUTABLE_OUTPUT_PATH ${BINARY_OUTPUT_DIR})
 
-target_include_directories(async_udp_client PRIVATE ${ASIO_INCLUDE_DIR} ${AWAITABLE_DEFAULT_H_DIR})
-target_link_libraries(async_udp_client pthread)
+target_include_directories(coro_udp_client_server_test PRIVATE ${ASIO_INCLUDE_DIR} ${AWAITABLE_DEFAULT_H_DIR})
+target_link_libraries(coro_udp_client_server_test pthread)
