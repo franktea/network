@@ -13,17 +13,17 @@ int main()
     asio::ip::udp::endpoint ep(asio::ip::address::from_string("127.0.0.1"),
             9099);
     auto client = std::make_shared<AsyncUdpClient>(io_context, ep);
-    for (int i = 0; i < 100000; ++i)
-    {
-        client->SendMessage(
-                std::string("this is message ") + std::to_string(i));
-    }
+    
+    auto sending = [client]() -> awaitable<void> {
+        for(int i = 0; i < 100000; ++i) {
+            co_await client->SendMessage(std::string("this is message ") + std::to_string(i));
+        }
+    };
 
-    for (int i = 0; i < 10000000; ++i)
-    {
-        io_context.restart();
-        io_context.run_for(std::chrono::microseconds(100));
-    }
+    co_spawn(io_context, sending(), detached);
+
+    io_context.run();
+
     return 0;
 }
 
