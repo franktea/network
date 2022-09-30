@@ -12,11 +12,6 @@
 #include "awaitable_default.h"
 #include <string>
 
-awaitable<bool> ConnectTo(tcp_socket& socket, tcp::endpoint dest) {
-    co_await socket.async_connect(dest);
-    co_return true;
-}
-
 // 发送一个字符串，返回接受到的字符串
 awaitable<std::string> EchoClient(tcp_socket& socket, std::string send_string) {
     char buffer[4096];

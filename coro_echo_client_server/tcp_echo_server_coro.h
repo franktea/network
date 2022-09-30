@@ -21,11 +21,12 @@ awaitable<void> Echo(tcp_socket socket) {
     }
 }
 
-awaitable<void> Listen(asio::io_context& io_context, tcp::endpoint server_addr) {
-    tcp_acceptor acceptor(io_context, server_addr);
+awaitable<void> Listen(tcp::endpoint server_addr) {
+    auto executor = co_await this_coro::executor;
+    tcp_acceptor acceptor(executor, server_addr);
     for(;;) {
         tcp::socket socket = co_await acceptor.async_accept();
-        asio::co_spawn(io_context, Echo(std::move(socket)), detached);
+        asio::co_spawn(executor, Echo(std::move(socket)), detached);
     }
 }
 
