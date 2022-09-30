@@ -9,6 +9,11 @@
 
 #include <asio.hpp>
 
+//注意，以后这个东东从experimental移除以后这里也要改一下
+#include "asio/experimental/awaitable_operators.hpp"
+// 只有using awaitable_operators才可以使用co_await (coroa() && corob())，注意co_await后面的一串东西要用括号括起来。
+using namespace asio::experimental::awaitable_operators;
+
 using asio::ip::tcp;
 using asio::ip::udp;
 using asio::awaitable;

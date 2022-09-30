@@ -8,6 +8,7 @@
 #ifndef CORO_ECHO_CLIENT_SERVER_TCP_ECHO_CLIENT_CORO_H_
 #define CORO_ECHO_CLIENT_SERVER_TCP_ECHO_CLIENT_CORO_H_
 
+#include <iostream>
 #include "awaitable_default.h"
 #include <string>
 
@@ -20,7 +21,7 @@ awaitable<bool> ConnectTo(tcp_socket& socket, tcp::endpoint dest) {
 awaitable<std::string> EchoClient(tcp_socket& socket, std::string send_string) {
     char buffer[4096];
     co_await asio::async_write(socket, asio::buffer(send_string));
-    size_t len = co_await asio::async_read(socket, asio::buffer(buffer));
+    size_t len = co_await socket.async_read_some(asio::buffer(buffer));
     co_return std::string(buffer, len);
 }
 

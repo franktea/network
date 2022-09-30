@@ -8,13 +8,15 @@
 #ifndef CORO_ECHO_CLIENT_SERVER_TCP_ECHO_SERVER_CORO_H_
 #define CORO_ECHO_CLIENT_SERVER_TCP_ECHO_SERVER_CORO_H_
 
-#include <string>
+#include <string_view>
+#include <iostream>
 #include "awaitable_default.h"
 
 awaitable<void> Echo(tcp_socket socket) {
     char buffer[4096];
     for(;;) {
         size_t n = co_await socket.async_read_some(asio::buffer(buffer));
+        std::cout<<"server got: "<<std::string_view(buffer, n)<<"\n";
         co_await asio::async_write(socket, asio::buffer(buffer, n));
     }
 }
