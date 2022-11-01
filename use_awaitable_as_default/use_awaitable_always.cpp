@@ -3,18 +3,7 @@
 
 #include <iostream>
 #include <asio.hpp>
-
-using asio::ip::tcp;
-using asio::awaitable;
-using asio::co_spawn;
-using asio::detached;
-using asio::use_awaitable;
-using asio::buffer;
-namespace this_coro = asio::this_coro;
-// 去掉所有的显式调用use_awaitable
-using tcp_socket = asio::use_awaitable_t<>::as_default_on_t<tcp::socket>;
-using tcp_resolver = asio::use_awaitable_t<>::as_default_on_t<tcp::resolver>;
-using tcp_acceptor = asio::use_awaitable_t<>::as_default_on_t<tcp::acceptor>;
+#include "awaitable_default.h"
 
 awaitable<void> Echo(tcp_socket stream) {
     try {

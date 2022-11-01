@@ -27,7 +27,10 @@ FetchContent_MakeAvailable(ut)
 set(ASIO_INCLUDE_DIR ${asio_SOURCE_DIR}/asio/include/)
 set(ut_SINGLE_INCLUDE ${ut_SOURCE_DIR}/include) # for unit test
 set(BINARY_OUTPUT_DIR ${PROJECT_SOURCE_DIR}/bin)
-set(AWAITABLE_DEFAULT_H_DIR ${PROJECT_SOURCE_DIR}) # for awaitable_default.h
+#set(AWAITABLE_DEFAULT_H_DIR ${PROJECT_SOURCE_DIR}) # for awaitable_default.h
+
+# include use_awaitable_default.h
+include_directories(${PROJECT_SOURCE_DIR})
 
 add_subdirectory(timer-performance)
 add_subdirectory(httpclient)
