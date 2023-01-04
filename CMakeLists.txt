@@ -4,7 +4,7 @@ project(network)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_CXX_FLAGS "-O2 -DASIO_STANDALONE -Werror")
+set(CMAKE_CXX_FLAGS "-O2 -DASIO_STANDALONE")
 
 include(FetchContent)
 FetchContent_Declare(asio
@@ -47,4 +47,5 @@ add_subdirectory(coro_echo_client_server)
 add_subdirectory(executor)
 add_subdirectory(timer_usage)
 add_subdirectory(use_awaitable_as_default)
+add_subdirectory(quicksort_coro)
 
