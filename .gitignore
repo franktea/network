@@ -3,3 +3,4 @@ bin/
 /.vscode/settings.json
 /.cproject
 /.project
+*.DS_Store
