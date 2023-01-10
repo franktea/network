@@ -42,6 +42,8 @@ add_custom_command(
     COMMAND ${_PROTOBUF_PROTOC} -I${PROJECT_SOURCE_DIR} --grpc_out=${PROJECT_SOURCE_DIR} --plugin=protoc-gen-grpc=${_GRPC_CPP_PLUGIN_EXECUTABLE} ${PROJECT_SOURCE_DIR}/helloworld.proto
 )
 
-add_executable(hello_world hello_world.cpp helloworld.grpc.pb.cc helloworld.pb.cc)
+add_executable(hello_world hello_world.cpp 
+    ${PROJECT_SOURCE_DIR}/helloworld.grpc.pb.cc 
+    ${PROJECT_SOURCE_DIR}/helloworld.pb.cc)
 
 target_link_libraries(hello_world grpc++)

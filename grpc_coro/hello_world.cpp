@@ -8,6 +8,7 @@
  * @copyright Copyright (c) 2023
  * 
  */
+#include <iostream>
 #include <list>
 #include <memory>
 #include "helloworld.grpc.pb.h"
@@ -30,9 +31,11 @@ void deallocate(T* t)
 struct TypeErasedOperation
 {
     using OnCompleteFunction = void (*)(TypeErasedOperation*, bool);
-    OnCompleteFunction on_complete;
+    OnCompleteFunction on_complete = nullptr;
 
-    void Complete(bool ok) { this->on_complete(this, ok); }
+    void Complete(bool ok) { 
+        this->on_complete(this, ok); 
+    }
 
     TypeErasedOperation(OnCompleteFunction on_complete) : on_complete(on_complete) {}
 };
@@ -71,7 +74,7 @@ struct GrpcContext : asio::execution_context
         asio::execution_context::destroy();
     }
 
-    executor_type get_executor() const noexcept;
+    executor_type get_executor() noexcept;
 
     static constexpr void* MAKER_TAG = nullptr;
 
@@ -85,7 +88,7 @@ struct GrpcContext : asio::execution_context
             {
                 while(!queued_operations.empty())
                 {
-                    auto& op = queued_operations.front();
+                    auto op = queued_operations.front();
                     queued_operations.pop_front();
                     op->Complete(ok);
                 }
@@ -109,6 +112,11 @@ struct GrpcContext::executor_type
     }
 };
 
+GrpcContext::executor_type GrpcContext::get_executor() noexcept
+{
+    return executor_type{this};
+}
+/*
 template<class CompletionToken>
 auto read(grpc::ClientAsyncReader<helloworld::HelloResponse>& reader,
     helloworld::HelloResponse& response, CompletionToken token)
@@ -127,11 +135,12 @@ asio::awaitable<void> ProcessRpc()
     helloworld::HelloResponse response;
     co_await read(*reader, response, asio::use_awaitable);
 }
+*/
 
 int main() {
     GrpcContext grpc_context{std::make_unique<grpc::CompletionQueue>()};
     GrpcContext::executor_type exec{&grpc_context};
-    exec.execute([](bool){});
-    asio::co_spawn(exec, ProcessRpc(), asio::detached);
+    exec.execute([](bool){ std::cout<<"hello wolrd\n"; });
+    //asio::co_spawn(exec, ProcessRpc(), asio::detached);
     grpc_context.Run();
 }
