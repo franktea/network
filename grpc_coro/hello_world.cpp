@@ -78,7 +78,7 @@ struct GrpcContext : asio::execution_context
 
     static constexpr void* MAKER_TAG = nullptr;
 
-    void Run()
+    void run()
     {
         void* tag;
         bool ok;
@@ -110,15 +110,38 @@ struct GrpcContext::executor_type
         grpc_context->queued_operations.push_front(op);
         grpc_context->alarm.Set(grpc_context->queue.get(), gpr_time_0(GPR_CLOCK_REALTIME), GrpcContext::MAKER_TAG);
     }
+
+    GrpcContext& query(asio::execution::context_t) const noexcept
+    {
+      return *grpc_context;
+    }
+
+    static constexpr asio::execution::blocking_t query(asio::execution::blocking_t) noexcept
+    {
+        return asio::execution::blocking.never;
+    }
+
+    friend bool operator==(const GrpcContext::executor_type& a,
+        const GrpcContext::executor_type& b) noexcept
+    {
+      return &a.grpc_context == &b.grpc_context;
+    }
+
+    friend bool operator!=(const GrpcContext::executor_type& a,
+        const GrpcContext::executor_type& b) noexcept
+    {
+      return &a.grpc_context != &b.grpc_context;
+    }
 };
 
 GrpcContext::executor_type GrpcContext::get_executor() noexcept
 {
     return executor_type{this};
 }
-/*
+
+// Read改成小写的read就编不过了，应该是跟某个名字叫read的函数冲突
 template<class CompletionToken>
-auto read(grpc::ClientAsyncReader<helloworld::HelloResponse>& reader,
+auto Read(grpc::ClientAsyncReader<helloworld::HelloResponse>& reader,
     helloworld::HelloResponse& response, CompletionToken token)
 {
     return asio::async_initiate<CompletionToken, void(bool)>(
@@ -131,16 +154,19 @@ auto read(grpc::ClientAsyncReader<helloworld::HelloResponse>& reader,
 
 asio::awaitable<void> ProcessRpc()
 {
-    std::unique_ptr<grpc::ClientAsyncReader<helloworld::HelloResponse>> reader;
+    std::unique_ptr<grpc::ClientAsyncReader<helloworld::HelloResponse>> reader;// =
+        //std::make_unique<grpc::ClientAsyncReader<helloworld::HelloResponse>>();
     helloworld::HelloResponse response;
-    co_await read(*reader, response, asio::use_awaitable);
+    co_await Read(*reader, response, asio::use_awaitable);
 }
-*/
+
+static_assert(asio::execution::is_executor<GrpcContext::executor_type>::value);
+//static_assert(asio::execution::is_scheduler<GrpcContext>::value);
 
 int main() {
     GrpcContext grpc_context{std::make_unique<grpc::CompletionQueue>()};
     GrpcContext::executor_type exec{&grpc_context};
     exec.execute([](bool){ std::cout<<"hello wolrd\n"; });
     //asio::co_spawn(exec, ProcessRpc(), asio::detached);
-    grpc_context.Run();
+    grpc_context.run();
 }
