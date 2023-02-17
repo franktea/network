@@ -32,18 +32,31 @@ set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:grpc_cpp_plugin>)
 
 FetchContent_MakeAvailable(grpc)
 
-add_custom_command(
-    OUTPUT helloworld.pb.cc
-    COMMAND ${_PROTOBUF_PROTOC} -I${PROJECT_SOURCE_DIR} --cpp_out=${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/helloworld.proto
-)
 
-add_custom_command(
-    OUTPUT helloworld.grpc.pb.cc
-    COMMAND ${_PROTOBUF_PROTOC} -I${PROJECT_SOURCE_DIR} --grpc_out=${PROJECT_SOURCE_DIR} --plugin=protoc-gen-grpc=${_GRPC_CPP_PLUGIN_EXECUTABLE} ${PROJECT_SOURCE_DIR}/helloworld.proto
-)
+# Proto file
+get_filename_component(hw_proto "helloworld.proto" ABSOLUTE)
+get_filename_component(hw_proto_path "${hw_proto}" PATH)
 
-add_executable(hello_world hello_world.cpp 
-    ${PROJECT_SOURCE_DIR}/helloworld.grpc.pb.cc 
-    ${PROJECT_SOURCE_DIR}/helloworld.pb.cc)
+# Generated sources
+set(hw_proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/helloworld.pb.cc")
+set(hw_proto_hdrs "${CMAKE_CURRENT_BINARY_DIR}/helloworld.pb.h")
+set(hw_grpc_srcs "${CMAKE_CURRENT_BINARY_DIR}/helloworld.grpc.pb.cc")
+set(hw_grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR}/helloworld.grpc.pb.h")
+add_custom_command(
+      OUTPUT "${hw_proto_srcs}" "${hw_proto_hdrs}" "${hw_grpc_srcs}" "${hw_grpc_hdrs}"
+      COMMAND ${_PROTOBUF_PROTOC}
+      ARGS --grpc_out "${CMAKE_CURRENT_BINARY_DIR}"
+        --cpp_out "${CMAKE_CURRENT_BINARY_DIR}"
+        -I "${hw_proto_path}"
+        --plugin=protoc-gen-grpc="${_GRPC_CPP_PLUGIN_EXECUTABLE}"
+        "${hw_proto}"
+      DEPENDS "${hw_proto}")
+
+# Include generated *.pb.h files
+include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+
+# 下面一句一定要用hw_proto_srcs和hw_grpc_srcs变量
+add_executable(hello_world hello_world.cpp ${hw_proto_srcs}
+    ${hw_grpc_srcs})
 
 target_link_libraries(hello_world grpc++)

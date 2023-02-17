@@ -16,6 +16,16 @@
 #include "grpcpp/alarm.h"
 #include "grpcpp/grpcpp.h"
 
+using grpc::Server;
+using grpc::ServerAsyncResponseWriter;
+using grpc::ServerBuilder;
+using grpc::ServerCompletionQueue;
+using grpc::ServerContext;
+using grpc::Status;
+using helloworld::Greeter;
+using helloworld::HelloResponse;
+using helloworld::HelloRequest;
+
 template<class T, class... Args>
 auto allocate(Args&&... args)
 {
@@ -61,11 +71,11 @@ struct GrpcContext : asio::execution_context
 {
     struct executor_type;
 
-    std::unique_ptr<grpc::CompletionQueue> queue;
+    std::unique_ptr<grpc::ServerCompletionQueue> queue;
     QueuedOperations queued_operations;
     grpc::Alarm alarm;
 
-    explicit GrpcContext(std::unique_ptr<grpc::CompletionQueue> queue) : queue(std::move(queue)) {}
+    explicit GrpcContext(std::unique_ptr<grpc::ServerCompletionQueue> queue) : queue(std::move(queue)) {}
 
     ~GrpcContext()
     {
@@ -106,7 +116,7 @@ struct GrpcContext::executor_type
     template<class Function>
     void execute(Function function) const
     {
-        auto* op = allocate<Operation<Function>>(function);
+        auto* op = allocate<Operation<Function>>(std::move(function));
         grpc_context->queued_operations.push_front(op);
         grpc_context->alarm.Set(grpc_context->queue.get(), gpr_time_0(GPR_CLOCK_REALTIME), GrpcContext::MAKER_TAG);
     }
@@ -141,7 +151,7 @@ GrpcContext::executor_type GrpcContext::get_executor() noexcept
 
 // Read改成小写的read就编不过了，应该是跟某个名字叫read的函数冲突
 template<class CompletionToken>
-auto Read(grpc::ClientAsyncReader<helloworld::HelloResponse>& reader,
+auto asnyc_hello(grpc::ClientAsyncReader<helloworld::HelloResponse>& reader,
     helloworld::HelloResponse& response, CompletionToken token)
 {
     return asio::async_initiate<CompletionToken, void(bool)>(
@@ -154,17 +164,18 @@ auto Read(grpc::ClientAsyncReader<helloworld::HelloResponse>& reader,
 
 asio::awaitable<void> ProcessRpc()
 {
-    std::unique_ptr<grpc::ClientAsyncReader<helloworld::HelloResponse>> reader;// =
-        //std::make_unique<grpc::ClientAsyncReader<helloworld::HelloResponse>>();
+    Greeter::AsyncService service;
+    //ServerAsyncResponseWriter<HelloResponse> responder;
+    HelloRequest request;
     helloworld::HelloResponse response;
-    co_await Read(*reader, response, asio::use_awaitable);
+    co_await asnyc_hello(reader, response, asio::use_awaitable);
 }
 
 static_assert(asio::execution::is_executor<GrpcContext::executor_type>::value);
 //static_assert(asio::execution::is_scheduler<GrpcContext>::value);
 
 int main() {
-    GrpcContext grpc_context{std::make_unique<grpc::CompletionQueue>()};
+    GrpcContext grpc_context{std::make_unique<grpc::ServerCompletionQueue>()};
     GrpcContext::executor_type exec{&grpc_context};
     exec.execute([](bool){ std::cout<<"hello wolrd\n"; });
     //asio::co_spawn(exec, ProcessRpc(), asio::detached);
