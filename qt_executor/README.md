@@ -1,0 +1,1 @@
+直接用qt-creator打开每个子目录下面的CMakeLists.txt进行编译。
