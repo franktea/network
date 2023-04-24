@@ -29,6 +29,8 @@ auto async_echo(asio::io_context& ioc,
     CompletionToken&& token)
 {
     return asio::async_initiate<CompletionToken, void(std::error_code)> (
+        // 在co_composed里面可以使用c++20协程，但是不能使用asio::use_awaitable，只能使用asio::deferred，
+        // 使用use_awaitable编不过。
         co_composed<void(std::error_code)>(
             [message, server, port](auto state, asio::io_context& ioc) -> void {
                 try {
