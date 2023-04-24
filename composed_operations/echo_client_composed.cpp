@@ -2,7 +2,9 @@
 #include <asio.hpp>
 #include <string>
 #include <string_view>
+#include <chrono>
 #include <asio/experimental/co_composed.hpp>
+#include <asio/experimental/awaitable_operators.hpp>
 #include "../coro_echo_client_server/tcp_echo_server_coro.h"
 
 using asio::async_connect;
@@ -14,6 +16,9 @@ using asio::deferred;
 using asio::experimental::co_composed;
 using asio::ip::tcp;
 namespace this_coro = asio::this_coro;
+
+using namespace asio::experimental::awaitable_operators;
+using namespace std::chrono_literals;
 
 // 短连接，发送几条消息以后断开
 template<typename CompletionToken>
@@ -70,9 +75,17 @@ int main() {
 
         co_spawn(io,
             [&io]()->asio::awaitable<void> {
+                // 先sleep一下，等待server启动成功。
+                asio::steady_timer timer(io);
+                timer.expires_after(100ms);
+                co_await timer.async_wait(asio::use_awaitable);
+
                 // 启动几个client
-                co_await async_echo(io, "c++20 coro message 1", "127.0.0.1", "1111", use_awaitable);
-                co_await async_echo(io, "c++20 coro message 2", "127.0.0.1", "1111", use_awaitable);
+                co_await ( async_echo(io, "c++20 coro message 1", "127.0.0.1", "1111", use_awaitable)
+                 && async_echo(io, "c++20 coro message 2", "127.0.0.1", "1111", use_awaitable) );
+
+                // 消息收完了，退出io_context
+                io.post([&io](){ io.stop(); });
             }, asio::detached);
         
         io.run();
