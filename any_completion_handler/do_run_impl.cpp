@@ -18,8 +18,8 @@ inline auto async_do_run(asio::any_io_executor ex, int run, Token&& token)
 {
     return asio::async_initiate<Token, void(error_code)>(
         do_run_impl, 
-        token, // 这里不能用std::move(token)，编不过
-        std::move(ex), 
+        token, // 这里不能用std::move(token)，因为这个参数的类型是CompletionToken &
+        ex, 
         run
     );
 }
@@ -49,7 +49,7 @@ int main()
     asio::co_spawn(ex, coro(1), asio::detached);
 
     async_do_run(ex, 2, [](error_code ec){
-        std::cout<<"callback completed: "<<ec.message()<<"\n";
+        std::cout<<"callback completed: "<< (ec ? ec.message() : "successful")<<"\n";
     });
 
     std::cout<<"ready? "<<std::boolalpha<<is_ready(f)<<"\n";
