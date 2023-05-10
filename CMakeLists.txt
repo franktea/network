@@ -51,4 +51,5 @@ add_subdirectory(thread_switch)
 add_subdirectory(use_awaitable_as_default)
 add_subdirectory(quicksort_coro)
 add_subdirectory(composed_operations)
+add_subdirectory(any_completion_handler)
 

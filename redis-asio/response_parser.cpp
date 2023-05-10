@@ -6,6 +6,7 @@
  */
 
 #include <map>
+#include <functional>
 
 #include "response_parser.h"
 
