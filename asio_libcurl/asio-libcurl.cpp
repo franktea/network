@@ -43,6 +43,7 @@ public:
         ioc_.run();
     }
 
+    asio::io_context& IoContext() { return ioc_; }
 private:
     // libcurl的回调函数
     static int socket_callback(CURL* easy,      /* easy handle */
@@ -67,8 +68,13 @@ private:
         }
         else if (timeout_ms == 0) {
             // call timeout function immediately
-            asio::error_code error;
-            asio_timer_callback(error);
+            //asio::error_code error;
+            //asio_timer_callback(error);
+            // 2023-05-11 新版的libcurl不允许直接在libcurl的回调函数中调用任何libucl的api，因此改成post
+            MultiInfo::Instance()->IoContext().post([multi](){
+                asio::error_code error;
+                asio_timer_callback(error);
+            });
         }
 
         return 0;
@@ -76,7 +82,7 @@ private:
 
 private:
     // callback of asio
-    static void asio_timer_callback(const asio::error_code& error)
+    static void asio_timer_callback(const asio::error_code error)
     {
         if (!error) {
             // libcurl读写数据
@@ -205,6 +211,7 @@ private:
             }
         }
 
+        std::cout<<"^^^^^^^^^^open socket fd="<<ret<<"\n";
         return ret;
     }
 
@@ -232,7 +239,14 @@ int MultiInfo::socket_callback(CURL* easy,      /* easy handle */
 {
     cout << "========>socket_callback, s=" << s << ", what=" << what << "\n";
 
-    Session* session = MultiInfo::Instance()->socket_map_.find(s)->second;
+    auto it = MultiInfo::Instance()->socket_map_.find(s);
+    if(it == MultiInfo::Instance()->socket_map_.end()) {
+        // 找不到，不应该
+        std::cout<<"can not find fd="<<s<<" in map. that's a bug of this cpp\n";
+        return 0;
+    }
+
+    Session* session = it->second;
     session->newest_event_ = what; // 目前最新的事件，保存在newest_event_成员中
 
     if (what == CURL_POLL_REMOVE) {
@@ -323,8 +337,8 @@ void Finish(const string& url, string&& html)
 int main()
 {
     string urls[] =
-    { "https://ec.haxx.se/libcurl-drive-multi-socket.html",
-    //"https://ec.haxx.se/usingcurl-downloads.html",
+    { "https://curl.se/libcurl/c/multi-uv.html",
+    //"https://curl.se/libcurl/c/multi-event.html",
     //"https://en.cppreference.com/w/cpp/container/vector",
             };
 
