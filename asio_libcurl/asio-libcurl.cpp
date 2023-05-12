@@ -29,7 +29,7 @@ class MultiInfo {
     int still_running_;
     asio::io_context ioc_;
     asio::steady_timer timer_;
-    unordered_map<curl_socket_t, Session*> socket_map_;
+    //unordered_map<curl_socket_t, Session*> socket_map_;
 
 public:
     static MultiInfo* Instance()
@@ -130,11 +130,15 @@ class Session {
     string html_; // the result
     char error_[CURL_ERROR_SIZE];
     FinishHttp finish_callback_;
-    asio::ip::tcp::socket* socket_;
+    asio::ip::tcp::socket socket_;
     int newest_event_; //
 public:
     Session(const string url, FinishHttp finish_cb)
-        : easy_(nullptr), url_(url), finish_callback_(finish_cb), socket_(nullptr), newest_event_(0)
+        : easy_(nullptr)
+        , url_(url)
+        , finish_callback_(finish_cb)
+        , socket_(MultiInfo::Instance()->ioc_)
+        , newest_event_(0)
     {
     }
 
@@ -144,8 +148,6 @@ public:
             curl_multi_remove_handle(MultiInfo::Instance()->multi_, easy_);
             curl_easy_cleanup(easy_);
         }
-
-        delete socket_;
     }
 
     int Init()
@@ -167,10 +169,6 @@ public:
         curl_easy_setopt(easy_, CURLOPT_NOPROGRESS, 1L);
         curl_easy_setopt(easy_, CURLOPT_LOW_SPEED_TIME, 3L);
         curl_easy_setopt(easy_, CURLOPT_LOW_SPEED_LIMIT, 10L);
-        curl_easy_setopt(easy_, CURLOPT_OPENSOCKETFUNCTION, Session::opensocket_callback);
-        curl_easy_setopt(easy_, CURLOPT_OPENSOCKETDATA, this);
-        curl_easy_setopt(easy_, CURLOPT_CLOSESOCKETFUNCTION, Session::closesocket_callback);
-        curl_easy_setopt(easy_, CURLOPT_CLOSESOCKETDATA, this);
         CURLMcode mc = curl_multi_add_handle(MultiInfo::Instance()->multi_, easy_);
         return mc;
     }
@@ -184,46 +182,6 @@ private:
         Session* s = static_cast<Session*>(userdata);
         s->html_.append(str);
         return written;
-    }
-
-    // set callback for opening sockets
-    static curl_socket_t opensocket_callback(void* clientp,
-                                             curlsocktype purpose,
-                                             struct curl_sockaddr* address)
-    {
-        curl_socket_t ret = CURL_SOCKET_BAD;
-
-        Session* s = static_cast<Session*>(clientp);
-        asio::io_context& ioc = MultiInfo::Instance()->ioc_;
-
-        // only for ipv4
-        if (purpose == CURLSOCKTYPE_IPCXN && address->family == AF_INET) {
-            s->socket_ = new asio::ip::tcp::socket(ioc);
-            asio::error_code ec;
-            s->socket_->open(asio::ip::tcp::v4(), ec);
-            if (ec) // cannot open socket, maybe too many open files
-            {
-                std::cout << "can't open file\n";
-            }
-            else {
-                ret = s->socket_->native_handle();
-                MultiInfo::Instance()->socket_map_.insert(std::make_pair(ret, s));
-            }
-        }
-
-        std::cout<<"^^^^^^^^^^open socket fd="<<ret<<"\n";
-        return ret;
-    }
-
-    // callback to socket close replacement function
-    static int closesocket_callback(void* clientp, curl_socket_t item)
-    {
-        cout << "********>closing fd=" << item << "\n";
-        Session* s = static_cast<Session*>(clientp);
-        asio::error_code ec;
-        s->socket_->close(ec);
-        MultiInfo::Instance()->socket_map_.erase(item);
-        return ec ? ec.value() : 0;
     }
 };
 
@@ -239,30 +197,35 @@ int MultiInfo::socket_callback(CURL* easy,      /* easy handle */
 {
     cout << "========>socket_callback, s=" << s << ", what=" << what << "\n";
 
-    auto it = MultiInfo::Instance()->socket_map_.find(s);
-    if(it == MultiInfo::Instance()->socket_map_.end()) {
-        // 找不到，不应该
-        std::cout<<"can not find fd="<<s<<" in map. that's a bug of this cpp\n";
+    void* session_ptr = nullptr;
+    if(CURLE_OK != curl_easy_getinfo(easy, CURLINFO_PRIVATE, &session_ptr)) {
+        std::cout<<"get private info error\n";
         return 0;
     }
+    Session* session = (Session*)session_ptr;
+    assert(session);
 
-    Session* session = it->second;
+    // 第一次创建socket，在这里创建
+    if(! session->socket_.is_open()) {
+        cout << "create socket for fd="<<s<<"\n";
+        session->socket_.assign(asio::ip::tcp::v4(), s);
+    }
+    assert(session->socket_.is_open());
     session->newest_event_ = what; // 目前最新的事件，保存在newest_event_成员中
 
     if (what == CURL_POLL_REMOVE) {
+        //delete session; // 在这里释放session
         return 0;
     }
 
     if (what & CURL_POLL_IN) {
-        session->socket_->async_wait(asio::ip::tcp::socket::wait_read,
-                                     std::bind(MultiInfo::asio_socket_callback, _1,
-                                               easy, s, CURL_POLL_IN, session));
+        session->socket_.async_wait(asio::ip::tcp::socket::wait_read,
+            [easy, s, session](asio::error_code ec){ MultiInfo::asio_socket_callback(ec, easy, s, CURL_POLL_IN, session); });
     }
 
     if (what & CURL_POLL_OUT) {
-        session->socket_->async_wait(asio::ip::tcp::socket::wait_write,
-                                     std::bind(MultiInfo::asio_socket_callback, _1,
-                                               easy, s, CURL_POLL_OUT, session));
+        session->socket_.async_wait(asio::ip::tcp::socket::wait_write,
+            [easy, s, session](asio::error_code ec){ MultiInfo::asio_socket_callback(ec, easy, s, CURL_POLL_OUT, session); });
     }
 
     return 0;
@@ -296,20 +259,17 @@ inline void MultiInfo::asio_socket_callback(const asio::error_code& ec,
     }
 
     // 继续监听相关的事件，因为asio的wait函数都是一次性的，而libcurl对同一种事件没有发生变化时不会再次通知。
-    // 上面调用了curl_multi_socket_action函数，对应的fd可能已经删除了，所以先检查一下，确认未删除，然后再重新监听事件
-    if (!ec && multi->socket_map_.find(s) != multi->socket_map_.end()) {
-        // 最新需要关注的事件已经保存在newest_event_里面了，这里只要根据newest_event_的值进行添加就可以了
-        if (what == CURL_POLL_IN && (session->newest_event_ & CURL_POLL_IN)) {
-            session->socket_->async_wait(asio::ip::tcp::socket::wait_read,
-                                         std::bind(MultiInfo::asio_socket_callback, _1,
-                                                   easy, s, CURL_POLL_IN, session));
-        }
+    // 最新需要关注的事件已经保存在newest_event_里面了，这里只要根据newest_event_的值进行添加就可以了
+    if (what == CURL_POLL_IN && (session->newest_event_ & CURL_POLL_IN)) {
+        session->socket_.async_wait(asio::ip::tcp::socket::wait_read,
+                                        std::bind(MultiInfo::asio_socket_callback, _1,
+                                                easy, s, CURL_POLL_IN, session));
+    }
 
-        if (what == CURL_POLL_OUT && (session->newest_event_ & CURL_POLL_OUT)) {
-            session->socket_->async_wait(asio::ip::tcp::socket::wait_write,
-                                         std::bind(MultiInfo::asio_socket_callback, _1,
-                                                   easy, s, CURL_POLL_OUT, session));
-        }
+    if (what == CURL_POLL_OUT && (session->newest_event_ & CURL_POLL_OUT)) {
+        session->socket_.async_wait(asio::ip::tcp::socket::wait_write,
+                                        std::bind(MultiInfo::asio_socket_callback, _1,
+                                                easy, s, CURL_POLL_OUT, session));
     }
 }
 
@@ -322,9 +282,10 @@ void MultiInfo::check_multi_info()
         if (msg->msg == CURLMSG_DONE) {
             CURL* easy = msg->easy_handle;
             Session* s;
-            curl_easy_getinfo(easy, CURLINFO_PRIVATE, &s);
+            if(CURLE_OK != curl_easy_getinfo(easy, CURLINFO_PRIVATE, &s)) {
+                cout<< "curl_easy_getinfo error\n";
+            }
             s->finish_callback_(s->url_, std::move(s->html_));
-            delete s;
         }
     }
 }
@@ -338,9 +299,9 @@ int main()
 {
     string urls[] =
     { "https://curl.se/libcurl/c/multi-uv.html",
-    //"https://curl.se/libcurl/c/multi-event.html",
-    //"https://en.cppreference.com/w/cpp/container/vector",
-            };
+      //"https://curl.se/libcurl/c/multi-event.html",
+      //"https://en.cppreference.com/w/cpp/container/vector",
+    };
 
     for (const string& url : urls)
     {
