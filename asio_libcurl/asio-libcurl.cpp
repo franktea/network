@@ -86,18 +86,15 @@ private:
     {
         if (!error) {
             // libcurl读写数据
+            int running_handles;
             CURLMcode mc = curl_multi_socket_action(
                 MultiInfo::Instance()->multi_, CURL_SOCKET_TIMEOUT, 0,
-                &(MultiInfo::Instance()->still_running_));
+                &running_handles);
             if (mc != CURLM_OK) {
                 cout << "curl_multi_socket_action error, mc=" << mc << "\n";
             }
 
             check_multi_info();
-
-            if(MultiInfo::Instance()->still_running_ <= 0) {
-                MultiInfo::Instance()->timer_.cancel();
-            }
         }
     }
 
@@ -123,16 +120,17 @@ private:
     MultiInfo& operator=(MultiInfo&&) = delete;
 };
 
-using FinishHttp = void (*)(const string& url, string&& html);
+using FinishHttp = void (*)(Session*, const string& url, string&& html);
 
 // one http request and response
 class Session {
     friend class MultiInfo;
+    friend void Finish(Session* session, const string& url, string&& html);
 
     CURL* easy_;
     string url_;  // the request url
     string html_; // the result
-    char error_[CURL_ERROR_SIZE];
+    char error_[CURL_ERROR_SIZE+1];
     FinishHttp finish_callback_;
     asio::ip::tcp::socket socket_;
     int newest_event_; //
@@ -153,6 +151,12 @@ public:
             curl_multi_remove_handle(MultiInfo::Instance()->multi_, easy_);
             curl_easy_cleanup(easy_);
         }
+    }
+
+    friend ostream& operator<<(ostream& os, const Session& s)
+    {
+        os<<s.url_<<"|";
+        return os;
     }
 
     int Init()
@@ -200,15 +204,17 @@ int MultiInfo::socket_callback(CURL* easy,      /* easy handle */
                                void* userp,     /* private callback pointer */
                                void* socketp)
 {
-    cout << "========>socket_callback, s=" << s << ", what=" << what << "\n";
-
     void* session_ptr = nullptr;
     if(CURLE_OK != curl_easy_getinfo(easy, CURLINFO_PRIVATE, &session_ptr)) {
         std::cout<<"get private info error\n";
         return 0;
     }
+
     Session* session = (Session*)session_ptr;
     assert(session);
+    assert(session->easy_ == easy);
+
+    cout << *session << "========>socket_callback, s=" << s << ", what=" << what << "\n";
 
     session->newest_event_ = what; // 目前最新的事件，保存在newest_event_成员中
 
@@ -224,11 +230,11 @@ int MultiInfo::socket_callback(CURL* easy,      /* easy handle */
 
     // 第一次创建socket，在这里创建
     if(! session->socket_.is_open()) {
-        cout << "create socket for fd="<<s<<"\n";
+        cout << *session << "create socket for fd="<<s<<"\n";
         session->socket_.assign(asio::ip::tcp::v4(), s);
     }
     assert(session->socket_.is_open());
-    cout << "========>socket native handle="<<session->socket_.native_handle()<<"\n";
+    cout << *session << "========>socket native handle="<<session->socket_.native_handle()<<"\n";
     assert(session->socket_.native_handle() == s);
 
 
@@ -251,7 +257,9 @@ inline void MultiInfo::asio_socket_callback(const asio::error_code& ec,
                                             int what, /* describes the socket */
                                             Session* session)
 {
-    cout << "........>asio_socket_callback, ec=" << ec.value() << ", s=" << s
+    assert(session->easy_ == easy);
+
+    cout << *session << "........>asio_socket_callback, ec=" << ec.value() << ", s=" << s
          << ", what=" << what << "\n";
 
     if (ec) // asio socket error
@@ -262,15 +270,15 @@ inline void MultiInfo::asio_socket_callback(const asio::error_code& ec,
     MultiInfo* multi = MultiInfo::Instance();
     CURLMcode rc = curl_multi_socket_action(multi->multi_, s, what, &multi->still_running_);
     if (rc != CURLM_OK) {
-        cout << "curl_multi_socket_action error, rc=" << int(rc) << "\n";
+        cout << *session << "curl_multi_socket_action error, rc=" << int(rc) << "\n";
     }
 
     check_multi_info();
 
-    if (multi->still_running_ <= 0) {
-        multi->timer_.cancel();
-        return;
-    }
+    //if (multi->still_running_ <= 0) {
+    //    multi->timer_.cancel();
+    //    return;
+    //}
 
     if(session->finished_) {
         delete session;
@@ -302,17 +310,17 @@ void MultiInfo::check_multi_info()
             CURL* easy = msg->easy_handle;
             Session* s;
             if(CURLE_OK != curl_easy_getinfo(easy, CURLINFO_PRIVATE, &s)) {
-                cout<< "curl_easy_getinfo error\n";
+                cout<<*s<< "curl_easy_getinfo error\n";
             }
-            s->finish_callback_(s->url_, std::move(s->html_));
+            s->finish_callback_(s, s->url_, std::move(s->html_));
             s->finished_ = true;
         }
     }
 }
 
-void Finish(const string& url, string&& html)
+void Finish(Session* session, const string& url, string&& html)
 {
-    cout << "finished, url=" << url << ", html:\n";//<<html<<"\n";
+    cout <<*session<< "fd="<<session->socket_.native_handle()<<" finished, url=" << url << ", html:\n";//<<html<<"\n";
 }
 
 int main()
@@ -322,8 +330,8 @@ int main()
       "https://curl.se/libcurl/c/multi-event.html",
       "https://en.cppreference.com/w/cpp/container/vector",
       "https://www.boost.org/",
-      "https://www.qq.com/",
-      "https://www.baidu.com/",
+      "https://www.codeproject.com/Tags/Cplusplus",
+      "https://isocpp.org",
     };
 
     for (const string& url : urls)
