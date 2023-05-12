@@ -259,6 +259,12 @@ inline void MultiInfo::asio_socket_callback(const asio::error_code& ec,
 {
     assert(session->easy_ == easy);
 
+    void* session_ptr = nullptr;
+    if(CURLE_OK != curl_easy_getinfo(easy, CURLINFO_PRIVATE, &session_ptr)) {
+        std::cout<<"get private info error\n";
+    }
+    assert(session_ptr == (void*)session);
+
     cout << *session << "........>asio_socket_callback, ec=" << ec.value() << ", s=" << s
          << ", what=" << what << "\n";
 
