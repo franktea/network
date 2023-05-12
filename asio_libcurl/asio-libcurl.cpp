@@ -94,6 +94,10 @@ private:
             }
 
             check_multi_info();
+
+            if(MultiInfo::Instance()->still_running_ <= 0) {
+                MultiInfo::Instance()->timer_.cancel();
+            }
         }
     }
 
@@ -132,6 +136,7 @@ class Session {
     FinishHttp finish_callback_;
     asio::ip::tcp::socket socket_;
     int newest_event_; //
+    bool finished_ = false; // finished以后才可以delete
 public:
     Session(const string url, FinishHttp finish_cb)
         : easy_(nullptr)
@@ -162,7 +167,7 @@ public:
         curl_easy_setopt(easy_, CURLOPT_WRITEFUNCTION,
                          Session::write_callback); // 某个连接收到数据了，需要保存数据在此回调函数中保存
         curl_easy_setopt(easy_, CURLOPT_WRITEDATA, this);
-        curl_easy_setopt(easy_, CURLOPT_VERBOSE, 1L); // curl输出连接中的更多信息
+        //curl_easy_setopt(easy_, CURLOPT_VERBOSE, 1L); // curl输出连接中的更多信息
         curl_easy_setopt(easy_, CURLOPT_ERRORBUFFER, error_);
         curl_easy_setopt(easy_, CURLOPT_PRIVATE,
                          this); // 存储一个指针，通过curl_easy_getinfo函数的CURLINFO_PRIVATE参数来取
@@ -205,18 +210,27 @@ int MultiInfo::socket_callback(CURL* easy,      /* easy handle */
     Session* session = (Session*)session_ptr;
     assert(session);
 
+    session->newest_event_ = what; // 目前最新的事件，保存在newest_event_成员中
+
+    if (what == CURL_POLL_REMOVE) {
+        // 2023-05-12 这里不能删除，因为这个CURL_POLL_REMOVE会触发多次，ssh的连接本来就有多次。
+        // 如果第一次就删了，后面就会core dump。
+        // 正确的解决方案是将socket删除以后再次创建，判断方法用：
+        // https://curl.se/libcurl/c/multi-uv.html
+        //delete session; // 在这里释放session
+        session->socket_.close();
+        return 0;
+    }
+
     // 第一次创建socket，在这里创建
     if(! session->socket_.is_open()) {
         cout << "create socket for fd="<<s<<"\n";
         session->socket_.assign(asio::ip::tcp::v4(), s);
     }
     assert(session->socket_.is_open());
-    session->newest_event_ = what; // 目前最新的事件，保存在newest_event_成员中
+    cout << "========>socket native handle="<<session->socket_.native_handle()<<"\n";
+    assert(session->socket_.native_handle() == s);
 
-    if (what == CURL_POLL_REMOVE) {
-        //delete session; // 在这里释放session
-        return 0;
-    }
 
     if (what & CURL_POLL_IN) {
         session->socket_.async_wait(asio::ip::tcp::socket::wait_read,
@@ -258,6 +272,11 @@ inline void MultiInfo::asio_socket_callback(const asio::error_code& ec,
         return;
     }
 
+    if(session->finished_) {
+        delete session;
+        return;
+    }
+
     // 继续监听相关的事件，因为asio的wait函数都是一次性的，而libcurl对同一种事件没有发生变化时不会再次通知。
     // 最新需要关注的事件已经保存在newest_event_里面了，这里只要根据newest_event_的值进行添加就可以了
     if (what == CURL_POLL_IN && (session->newest_event_ & CURL_POLL_IN)) {
@@ -286,21 +305,25 @@ void MultiInfo::check_multi_info()
                 cout<< "curl_easy_getinfo error\n";
             }
             s->finish_callback_(s->url_, std::move(s->html_));
+            s->finished_ = true;
         }
     }
 }
 
 void Finish(const string& url, string&& html)
 {
-    cout << "finished, url=" << url << ", html:\n"<<html<<"\n";
+    cout << "finished, url=" << url << ", html:\n";//<<html<<"\n";
 }
 
 int main()
 {
     string urls[] =
     { "https://curl.se/libcurl/c/multi-uv.html",
-      //"https://curl.se/libcurl/c/multi-event.html",
-      //"https://en.cppreference.com/w/cpp/container/vector",
+      "https://curl.se/libcurl/c/multi-event.html",
+      "https://en.cppreference.com/w/cpp/container/vector",
+      "https://www.boost.org/",
+      "https://www.qq.com/",
+      "https://www.baidu.com/",
     };
 
     for (const string& url : urls)
