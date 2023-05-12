@@ -331,7 +331,7 @@ void MultiInfo::check_multi_info()
 
 void Finish(const string& url, string&& html)
 {
-    cout << "finished, url=" << url << ", html:\n"; //<<html<<"\n";
+    cout << "finished, url=" << url << ", html:\n"<<html<<"\n";
 }
 
 int main()
