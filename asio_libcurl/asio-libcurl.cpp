@@ -278,51 +278,6 @@ int MultiInfo::socket_callback(CURL* easy,      /* easy handle */
         abort();
     }
 
-/*
-    void* session_ptr = nullptr;
-    if(CURLE_OK != curl_easy_getinfo(easy, CURLINFO_PRIVATE, &session_ptr)) {
-        std::cout<<"get private info error\n";
-        return 0;
-    }
-
-    Session* session = (Session*)session_ptr;
-    assert(session);
-    assert(session->easy_ == easy);
-
-    cout << *session << "========>socket_callback, s=" << s << ", what=" << what << "\n";
-
-    session->newest_event_ = what; // 目前最新的事件，保存在newest_event_成员中
-
-    if (what == CURL_POLL_REMOVE) {
-        // 2023-05-12 这里不能删除，因为这个CURL_POLL_REMOVE会触发多次，ssh的连接本来就有多次。
-        // 如果第一次就删了，后面就会core dump。
-        // 正确的解决方案是将socket删除以后再次创建，判断方法用：
-        // https://curl.se/libcurl/c/multi-uv.html
-        //delete session; // 在这里释放session
-        session->socket_.close();
-        return 0;
-    }
-
-    // 第一次创建socket，在这里创建
-    if(! session->socket_.is_open()) {
-        cout << *session << "create socket for fd="<<s<<"\n";
-        session->socket_.assign(asio::ip::tcp::v4(), s);
-    }
-    assert(session->socket_.is_open());
-    cout << *session << "========>socket native handle="<<session->socket_.native_handle()<<"\n";
-    assert(session->socket_.native_handle() == s);
-
-
-    if (what & CURL_POLL_IN) {
-        session->socket_.async_wait(asio::ip::tcp::socket::wait_read,
-            [easy, s, session](asio::error_code ec){ MultiInfo::asio_socket_callback(ec, easy, s, CURL_POLL_IN, session); });
-    }
-
-    if (what & CURL_POLL_OUT) {
-        session->socket_.async_wait(asio::ip::tcp::socket::wait_write,
-            [easy, s, session](asio::error_code ec){ MultiInfo::asio_socket_callback(ec, easy, s, CURL_POLL_OUT, session); });
-    }
-*/
     return 0;
 }
 
@@ -334,6 +289,10 @@ inline void MultiInfo::asio_socket_callback(const asio::error_code& ec,
                                             int id,
                                             SocketItem* item)
 {
+    if(MultiInfo::Instance()->socket_map_.find(id) == MultiInfo::Instance()->socket_map_.end()) {
+        return;
+    }
+
     assert(session->easy_ == easy);
 
     void* session_ptr = nullptr;
