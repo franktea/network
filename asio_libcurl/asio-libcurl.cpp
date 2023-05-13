@@ -20,16 +20,18 @@ using std::placeholders::_1;
 // -I../asio/asio/include
 
 class Session;
+struct SocketItem;
 
 // multi info, singleton
 class MultiInfo {
     friend class Session;
+    friend SocketItem;
 
     CURLM* multi_;
     int still_running_;
     asio::io_context ioc_;
     asio::steady_timer timer_;
-    //unordered_map<curl_socket_t, Session*> socket_map_;
+    unordered_map<uint32_t, SocketItem*> socket_map_;
 
 public:
     static MultiInfo* Instance()
@@ -102,7 +104,9 @@ private:
                                      CURL* easy,      /* easy handle */
                                      curl_socket_t s, /* socket */
                                      int what,        /* describes the socket */
-                                     Session* session);
+                                     Session* session,
+                                     int id,
+                                     SocketItem* item);
 
 private:
     static void check_multi_info();
@@ -194,6 +198,30 @@ private:
     }
 };
 
+struct SocketItem {
+    SocketItem(curl_socket_t fd) : socket(MultiInfo::Instance()->ioc_),
+        sockfd(fd),
+        events(0) 
+    {
+        static uint32_t id_num = 0;
+        id = ++id_num;
+        if(id == 0) {
+            id = ++id_num;
+        }
+        socket.assign(asio::ip::tcp::v4(), fd);
+        MultiInfo::Instance()->socket_map_.insert(std::make_pair(id, this));
+    }
+
+    ~SocketItem() {
+        MultiInfo::Instance()->socket_map_.erase(id);
+    }
+
+    asio::ip::tcp::socket socket;
+    curl_socket_t sockfd;
+    int events;
+    int id;
+};
+
 // 当libcurl中的某个socket需要监听的事件发生改变的时候，都会调用此函数；
 // 比如说从没有变成可写、从可写变成可读等变化的时候都会调用此函数；
 // 此函数的what传的是当前socket需要关注的全部事件，包括以前曾经通知过并且现在还需要的。
@@ -204,6 +232,53 @@ int MultiInfo::socket_callback(CURL* easy,      /* easy handle */
                                void* userp,     /* private callback pointer */
                                void* socketp)
 {
+    void* session_ptr = nullptr;
+    if(CURLE_OK != curl_easy_getinfo(easy, CURLINFO_PRIVATE, &session_ptr)) {
+        std::cout<<"get private info error\n";
+        return 0;
+    }
+
+    Session* session = (Session*)session_ptr;
+    assert(session);
+    assert(session->easy_ == easy);
+
+    cout << *session << "========>socket_callback, s=" << s << ", what=" << what << "\n";
+
+    switch(what) {
+        case CURL_POLL_IN:
+        case CURL_POLL_OUT:
+        case CURL_POLL_INOUT:
+        {
+            SocketItem* item = socketp ? (SocketItem*)socketp : new SocketItem(s);
+            item->events = what;
+            curl_multi_assign(MultiInfo::Instance()->multi_, s, (void*)item);
+
+            if (what & CURL_POLL_IN) {
+                item->socket.async_wait(asio::ip::tcp::socket::wait_read,
+                    [easy, s, session, item](asio::error_code ec){ MultiInfo::asio_socket_callback(ec, easy, s, CURL_POLL_IN, session, item->id, item); });
+            }
+
+            if (what & CURL_POLL_OUT) {
+                item->socket.async_wait(asio::ip::tcp::socket::wait_write,
+                    [easy, s, session, item](asio::error_code ec){ MultiInfo::asio_socket_callback(ec, easy, s, CURL_POLL_OUT, session, item->id, item); });
+            }
+        }
+        break;
+        case CURL_POLL_REMOVE:
+        {
+            if(socketp) {
+                SocketItem* item = (SocketItem*)socketp;
+                item->socket.close();
+                delete item;
+                curl_multi_assign(MultiInfo::Instance()->multi_, s, NULL);
+            }
+        }
+        break;
+        default:
+        abort();
+    }
+
+/*
     void* session_ptr = nullptr;
     if(CURLE_OK != curl_easy_getinfo(easy, CURLINFO_PRIVATE, &session_ptr)) {
         std::cout<<"get private info error\n";
@@ -247,7 +322,7 @@ int MultiInfo::socket_callback(CURL* easy,      /* easy handle */
         session->socket_.async_wait(asio::ip::tcp::socket::wait_write,
             [easy, s, session](asio::error_code ec){ MultiInfo::asio_socket_callback(ec, easy, s, CURL_POLL_OUT, session); });
     }
-
+*/
     return 0;
 }
 
@@ -255,7 +330,9 @@ inline void MultiInfo::asio_socket_callback(const asio::error_code& ec,
                                             CURL* easy,      /* easy handle */
                                             curl_socket_t s, /* socket */
                                             int what, /* describes the socket */
-                                            Session* session)
+                                            Session* session,
+                                            int id,
+                                            SocketItem* item)
 {
     assert(session->easy_ == easy);
 
@@ -264,6 +341,7 @@ inline void MultiInfo::asio_socket_callback(const asio::error_code& ec,
         std::cout<<"get private info error\n";
     }
     assert(session_ptr == (void*)session);
+    assert(item->sockfd == s);
 
     cout << *session << "........>asio_socket_callback, ec=" << ec.value() << ", s=" << s
          << ", what=" << what << "\n";
@@ -293,16 +371,18 @@ inline void MultiInfo::asio_socket_callback(const asio::error_code& ec,
 
     // 继续监听相关的事件，因为asio的wait函数都是一次性的，而libcurl对同一种事件没有发生变化时不会再次通知。
     // 最新需要关注的事件已经保存在newest_event_里面了，这里只要根据newest_event_的值进行添加就可以了
-    if (what == CURL_POLL_IN && (session->newest_event_ & CURL_POLL_IN)) {
-        session->socket_.async_wait(asio::ip::tcp::socket::wait_read,
-                                        std::bind(MultiInfo::asio_socket_callback, _1,
-                                                easy, s, CURL_POLL_IN, session));
-    }
+    if(MultiInfo::Instance()->socket_map_.find(id) != MultiInfo::Instance()->socket_map_.end()) {
+        if (what == CURL_POLL_IN && (item->events & CURL_POLL_IN)) {
+            item->socket.async_wait(asio::ip::tcp::socket::wait_read,
+                                            std::bind(MultiInfo::asio_socket_callback, _1,
+                                                    easy, s, CURL_POLL_IN, session, id, item));
+        }
 
-    if (what == CURL_POLL_OUT && (session->newest_event_ & CURL_POLL_OUT)) {
-        session->socket_.async_wait(asio::ip::tcp::socket::wait_write,
-                                        std::bind(MultiInfo::asio_socket_callback, _1,
-                                                easy, s, CURL_POLL_OUT, session));
+        if (what == CURL_POLL_OUT && (item->events & CURL_POLL_OUT)) {
+            item->socket.async_wait(asio::ip::tcp::socket::wait_write,
+                                            std::bind(MultiInfo::asio_socket_callback, _1,
+                                                    easy, s, CURL_POLL_OUT, session, id, item));
+        }
     }
 }
 
