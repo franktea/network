@@ -299,7 +299,7 @@ inline void MultiInfo::asio_socket_callback(const asio::error_code& ec,
     cout << *session << "........>asio_socket_callback, ec=" << ec.value() << ", s=" << s
          << ", what=" << what << "\n";
 
-    if(ec) {
+    if(ec) { // 因为这个回调函数之前放进asio的队列中的，有可能此时对应的item已经被释放掉了，对应的socket也关掉了，关掉socket会传一个ec
         return;
     }
 
@@ -365,7 +365,7 @@ void MultiInfo::check_multi_info()
 
 void Finish(Session* session, const string& url, string&& html)
 {
-    cout <<*session<< "fd="<<session->socket_.native_handle()<<" finished, url=" << url << ", html:\n";//<<html<<"\n";
+    cout <<*session<< "fd="<<session->socket_.native_handle()<<" finished, url=" << url << ", html is written to file\n";//<<html<<"\n";
     string file_name = url;
     for(char& c: file_name) {
         if(c == '/') c = '-';
