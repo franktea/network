@@ -12,6 +12,7 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <fstream>
 
 using namespace std;
 using std::placeholders::_1;
@@ -365,6 +366,14 @@ void MultiInfo::check_multi_info()
 void Finish(Session* session, const string& url, string&& html)
 {
     cout <<*session<< "fd="<<session->socket_.native_handle()<<" finished, url=" << url << ", html:\n";//<<html<<"\n";
+    string file_name = url;
+    for(char& c: file_name) {
+        if(c == '/') c = '-';
+    }
+    ofstream f(file_name);
+    if(f.is_open()) {
+        f << html;
+    }
 }
 
 int main()
