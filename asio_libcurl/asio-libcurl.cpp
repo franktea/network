@@ -251,6 +251,7 @@ int MultiInfo::socket_callback(CURL* easy,      /* easy handle */
         {
             SocketItem* item = socketp ? (SocketItem*)socketp : new SocketItem(s);
             item->events = what;
+            assert(item->sockfd == s);
             curl_multi_assign(MultiInfo::Instance()->multi_, s, (void*)item);
 
             if (what & CURL_POLL_IN) {
