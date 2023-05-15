@@ -305,7 +305,8 @@ int MultiInfo::socket_callback(CURL* easy,      /* easy handle */
         case CURL_POLL_REMOVE:
         {
             if(socketp) {
-                auto item = (SocketItem*)socketp;
+                uint32_t socket_id = (uint32_t)(size_t)(socketp);
+                auto item = MultiInfo::Instance()->socket_map_.find(socket_id)->second;
                 item->socket.close();
                 MultiInfo::Instance()->socket_map_.erase(item->id);
                 curl_multi_assign(MultiInfo::Instance()->multi_, s, NULL);
@@ -394,13 +395,18 @@ void MultiInfo::check_multi_info()
          msg = curl_multi_info_read(MultiInfo::Instance()->multi_, &msgs_left)) {
         if (msg->msg == CURLMSG_DONE) {
             CURL* easy = msg->easy_handle;
-            Session* s;
-            if(CURLE_OK != curl_easy_getinfo(easy, CURLINFO_PRIVATE, &s)) {
-                cout<<*s<< "curl_easy_getinfo error\n";
+            void* session_ptr = nullptr;
+            if(CURLE_OK != curl_easy_getinfo(easy, CURLINFO_PRIVATE, &session_ptr)) {
+                std::cout<<"get private info error\n";
             }
-            //s->finish_callback_(s, s->url_, std::move(s->html_));
-            s->handler_(asio::error_code{}, s->html_);
-            s->finished_ = true;
+            uint32_t session_id = (uint32_t)(size_t)(session_ptr);
+            auto it = MultiInfo::Instance()->session_map_.find(session_id);
+            if(it == MultiInfo::Instance()->session_map_.end()) { // 已经被释放了
+                return;
+            }
+            auto session = it->second;
+            session->handler_(asio::error_code{}, session->html_);
+            session->finished_ = true;
         }
     }
 }
