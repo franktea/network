@@ -31,6 +31,8 @@ set(PROJECT_SOURCES
         qt_executor.hpp
         qt_net_application.hpp
         qt_net_application.cpp
+        qt_guarded_executor.hpp
+        add_guard_executor.hpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
