@@ -26,7 +26,7 @@ void once_in(size_t n, auto&& action)
     static std::atomic_size_t counter_ = 0;
     if((++counter_ % n) == 0)
     {
-        if constexpr(std::is_invocable_v(decltype(action), size_t))
+        if constexpr(std::is_invocable_v<decltype(action), size_t>)
         {
             std::move(action)(counter_);
         } else {

@@ -43,7 +43,7 @@ asio::awaitable<void> async_sleep(std::chrono::milliseconds time)
 {
     std::cout<<"begin sleep\n";
     co_await async_wait_for(co_await asio::this_coro::executor, time, asio::use_awaitable);
-    std::cout<<"wake up after "<<time<<"\n";
+    std::cout<<"wake up after "<<time.count()<<" ms\n";
 }
 
 int main()
