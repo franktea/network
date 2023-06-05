@@ -21,16 +21,16 @@ using namespace asio::experimental::awaitable_operators;
 using namespace std::literals::chrono_literals;
 
 // helper to reduced frequncy logging
-void once_in(size_t n, auto&& action)
+void run_logging(size_t n, auto&& log_function)
 {
     static std::atomic_size_t counter_ = 0;
     if((++counter_ % n) == 0)
     {
-        if constexpr(std::is_invocable_v<decltype(action), size_t>)
+        if constexpr(std::is_invocable_v<decltype(log_function), size_t>)
         {
-            std::move(action)(counter_);
+            std::move(log_function)(counter_);
         } else {
-            std::move(action)();
+            std::move(log_function)();
         }
     }
 }
@@ -50,11 +50,11 @@ asio::awaitable<void> server_session(asio::ip::tcp::socket socket)
             if(auto r = co_await (asio::async_read(socket, asio::buffer(data), as_tuple(asio::use_awaitable)) || timeout(2ms));
                 r.index() == 1)
             {
-                once_in(1000, [&]{ std::cout<< "server session time out.\n"; });
+                run_logging(1000, [&]{ std::cout<< "server session time out.\n"; });
             } else {
                 auto [e, n] = std::get<0>(r);
                 if(! e) {
-                    once_in(1000, [&, n] {
+                    run_logging(1000, [&, n] {
                         std::cout << "server session writing " << n << " bytes to "
                             << socket.remote_endpoint() << "\n";
                     });
@@ -95,7 +95,7 @@ asio::awaitable<void> client_session(uint16_t port)
             co_await ( asio::async_read(socket, asio::buffer(data), asio::use_awaitable) || timeout(2ms) );
             auto w = co_await asio::async_write(socket, asio::buffer(data, 2000), asio::use_awaitable);
 
-            once_in(1000, [&](size_t counter){
+            run_logging(1000, [&](size_t counter){
                 std::cout << "#" << counter << " wrote " << w << " bytes from " << socket.local_endpoint() << "\n";
             });
         }
