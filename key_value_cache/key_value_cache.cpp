@@ -2,7 +2,8 @@
 
 asio::awaitable<void> Test(AsyncCache<std::string, std::string>& cache)
 {
-    co_await cache.async_get(std::string("hello"), asio::use_awaitable);
+    auto str = co_await cache.async_get(std::string("hello"), asio::use_awaitable);
+    std::cout<<"get str: "<<str<<"\n";
     co_return;
 }
 

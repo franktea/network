@@ -33,9 +33,9 @@ public:
     template<typename CompletionToken>
     auto async_get(Key key, CompletionToken&& token)
     {
-        return asio::async_compose<CompletionToken, void(asio::error_code, Value)>(
-            [this, &key](auto& self, asio::error_code ec, Value value) mutable -> void {
-                asio::any_completion_handler<void(asio::error_code, Value)> h = std::move(self);
+        return asio:: async_initiate<CompletionToken, void(asio::error_code, Value)>(
+            [this, &key](auto&& handler) mutable -> void {
+                asio::any_completion_handler<void(asio::error_code, Value)> h = std::move(handler);
                 asio::post(io_context_.get_executor(), [h = std::move(h)]() mutable { h(asio::error_code{}, std::string("hello")); });
             }, token
         );
