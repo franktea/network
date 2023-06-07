@@ -4,7 +4,7 @@ project(network)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_CXX_FLAGS "-O2 -DASIO_STANDALONE")
+set(CMAKE_CXX_FLAGS "-O2 -DBOOST_ASIO_NO_TS_EXECUTORS")
 
 include(FetchContent)
 FetchContent_Declare(asio
