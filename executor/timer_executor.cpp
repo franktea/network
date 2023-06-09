@@ -189,7 +189,8 @@ int main()
     asio::dispatch(e1, [](){ std::cout<<"hello after 1s\n"; });
     asio::dispatch(e2, [](){ std::cout<<"hello after 2s\n"; });
     asio::post(e3, [](){ std::cout<<"hello after 3s\n"; });
-    asio::post(e6, [&scheduler](){ scheduler.stop(); std::cout<<"stopped after 6s\n"; }); // 6s后停止
+    asio::any_io_executor ae6 = e6; // can assign to any_io_executor
+    asio::post(ae6, [&scheduler](){ scheduler.stop(); std::cout<<"stopped after 6s\n"; }); // 6s后停止
     asio::co_spawn(scheduler, Sleep5(scheduler), asio::detached);
     scheduler.run();
 }
