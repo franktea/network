@@ -19,7 +19,7 @@ inline auto async_do_run(asio::any_io_executor ex, int run, Token&& token)
 {
     return asio::async_initiate<Token, void(error_code)>(
         do_run_impl, 
-        token, // 这里不能用std::move(token)，因为这个参数的类型是CompletionToken &
+        token, // 这里不能用std::move(token)，因为这个参数的类型是CompletionToken &，这个token的作用是用来产生一个completion handler的，completion handler才应该是move only的。
         ex, 
         run
     );
