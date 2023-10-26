@@ -11,6 +11,8 @@ for(;;) {
     // 收取包头，因为包头是定长的，用asio的一次调用即可。
     // 注意此处用的是sizeof(PkgHeader)，实际上打包的时候考虑到字节的对齐未必成立，但只要包头是定长即可。
     // 例如包头打包以后是20字节，那么就收取20字节。
+    // 还有一个注意事项就是网络通信一般是需要转字节序的，因为整数在不同的cpu里面有大端和小端两种表示方法，
+    // 此处未转字节序是假设两边的cpu一样。
     size_t n = co_await asio::async_read(socket_, asio::buffer(&request_, sizeof(PkgHeader)));
 
     // check if request body len is valid
