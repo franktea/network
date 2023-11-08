@@ -1,0 +1,18 @@
+project(asio-examples)
+
+add_executable(example-cpp11-allocation-server cpp11/allocation/server.cpp)
+add_executable(example-cpp11-buffers-reference_counted cpp11/buffers/reference_counted.cpp)
+add_executable(example-cpp11-chat-client cpp11/chat/chat_client.cpp)
+add_executable(example-cpp11-chat-server cpp11/chat/chat_server.cpp)
+add_executable(example-cpp11-deferred-1 cpp11/deferred/deferred_1.cpp)
+add_executable(example-cpp11-deferred-2 cpp11/deferred/deferred_2.cpp)
+add_executable(example-cpp11-echo-async_tcp_server cpp11/echo/async_tcp_echo_server.cpp)
+add_executable(example-cpp11-echo-async_udp_server cpp11/echo/async_udp_echo_server.cpp)
+add_executable(example-cpp11-echo-blocking_tcp_client cpp11/echo/blocking_tcp_echo_client.cpp)
+add_executable(example-cpp11-echo-blocking_tcp_server cpp11/echo/blocking_tcp_echo_server.cpp)
+add_executable(example-cpp11-echo-blocking_udp_client cpp11/echo/blocking_udp_echo_client.cpp)
+add_executable(example-cpp11-echo-blocking_udp_server cpp11/echo/blocking_udp_echo_server.cpp)
+add_executable(example-cpp11-executors-actor cpp11/executors/actor.cpp)
+add_executable(exemple-cpp11-executors-bank_account_1 cpp11/executors/bank_account_1.cpp)
+
+set(EXECUTABLE_OUTPUT_PATH ${BINARY_OUTPUT_DIR})

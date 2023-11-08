@@ -32,6 +32,7 @@ set(BINARY_OUTPUT_DIR ${PROJECT_SOURCE_DIR}/bin)
 # include use_awaitable_default.h
 include_directories(${PROJECT_SOURCE_DIR})
 
+add_subdirectory(asio-examples)
 add_subdirectory(async_do)
 add_subdirectory(timer-performance)
 add_subdirectory(httpclient)
