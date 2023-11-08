@@ -95,11 +95,12 @@ public:
     return &memory_ != &other.memory_;
   }
 
+  // 这里的const去掉也能编过。
   T* allocate(std::size_t n) const
   {
     return static_cast<T*>(memory_.allocate(sizeof(T) * n));
   }
-
+  // const可以去掉。
   void deallocate(T* p, std::size_t /*n*/) const
   {
     return memory_.deallocate(p);
@@ -132,7 +133,7 @@ private:
     auto self(shared_from_this());
     socket_.async_read_some(asio::buffer(data_),
         asio::bind_allocator(
-          handler_allocator<int>(handler_memory_),
+          handler_allocator<int>(handler_memory_), // 这个const handler_allocator&是会被拷贝的
           [this, self](std::error_code ec, std::size_t length)
           {
             if (!ec)
