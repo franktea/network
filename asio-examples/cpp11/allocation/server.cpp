@@ -60,7 +60,10 @@ public:
 
 private:
   // Storage space used for handler-based custom memory allocation.
-  typename std::aligned_storage<1024>::type storage_;
+  // typename std::aligned_storage<1024>::type storage_;
+  // std::aligned_storage在C++23中被弃用，stackoverflow推荐下面的用法：
+  // 链接：https://stackoverflow.com/questions/71828288/why-is-stdaligned-storage-to-be-deprecated-in-c23-and-what-to-use-instead
+  alignas(1024) std::byte storage_[1024];
 
   // Whether the handler-based custom allocation storage has been used.
   bool in_use_;
