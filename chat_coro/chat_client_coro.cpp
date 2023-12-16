@@ -34,6 +34,7 @@ private:
         // 读取来自服务器的信息
         while(1) {
             co_await asio::async_read(socket_, asio::buffer(read_msg_.data(), read_msg_.header_length));
+            read_msg_.decode_header();
             co_await asio::async_read(socket_, asio::buffer(read_msg_.body(), read_msg_.body_length()));
             std::cout.write(read_msg_.body(), read_msg_.body_length());
             std::cout<<"\n";
