@@ -192,7 +192,7 @@ private:
   }
 
   tcp::acceptor acceptor_;
-  chat_room room_;
+  chat_room room_; // 每个chat server对应一个room，也可以让一个一个server对应多个room，例如给每个room取一个名字，玩家自己选择加入那个room
 };
 
 //----------------------------------------------------------------------
@@ -209,7 +209,7 @@ int main(int argc, char* argv[])
 
     asio::io_context io_context;
 
-    std::list<chat_server> servers;
+    std::list<chat_server> servers; // 有多个chat server，每个端口对应一个
     for (int i = 1; i < argc; ++i)
     {
       tcp::endpoint endpoint(tcp::v4(), std::atoi(argv[i]));
