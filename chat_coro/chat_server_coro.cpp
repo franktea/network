@@ -130,7 +130,7 @@ private:
 
 int main(int argc, char* argv[]) {
     if(argc < 2) {
-        std::cerr << "usage: chat_server port1 port2 ... portn" << "\n";
+        std::cerr << "usage: chat_server_coro port1 port2 ... portn" << "\n";
         return 1;
     }
 
