@@ -1,5 +1,10 @@
 project(asio-examples)
 
+add_executable(cpp11to20-chat-chat_client cpp11to20/chat/chat_client.cpp)
+add_executable(cpp11to20-chat-chat_server cpp11to20/chat/chat_server.cpp)
+add_executable(cpp11to20-buffers-reference_counted cpp11to20/buffers/reference_counted.cpp)
+add_executable(cpp11to20-client-for_timeserver cpp11to20/buffers/client_for_timeserver.cpp)
+
 # 下面一堆add_executable用脚本generate.py生成，然后再手动编辑部分
 
 add_executable(cpp20-invocation-completion_executor cpp20/invocation/completion_executor.cpp)
