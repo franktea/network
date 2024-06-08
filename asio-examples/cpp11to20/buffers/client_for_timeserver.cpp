@@ -15,7 +15,7 @@ asio::awaitable<void> GetTime(asio::io_context& io_context, int port) {
 
     char buff[4096];
     size_t len = co_await socket.async_read_some(asio::buffer(buff), asio::use_awaitable);
-    std::cout<< "time is " << std::string_view(buff, buff + len) << "\n";
+    std::cout<< "time is " << std::string_view(buff, len) << "\n";
 }
 
 int main(int argc, char* argv[]) {
