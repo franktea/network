@@ -5,6 +5,24 @@
 
 另外，cpp17的功能cpp20都有，所以也懒得注释了。
 
+# 关于io_uring的启用
+
+asio中开启支持io_uring的方法如下：
+
+```
+# use io_uring example
+
+target_compile_definitions(your_executable
+    PRIVATE
+        ASIO_HAS_IO_URING=1
+	    ASIO_DISABLE_EPOLL=1
+)
+
+target_link_libraries(your_executable
+    PRIVATE uring
+)
+```
+
 # cpp11/allocation
 
 主要就是演示`socket_.async_read_some`这样的函数所发起的一部操作本身是支持自定义的allocator的，传入allocator的方式是用`asio::bind_allocator`，`asio::bind_allocator`的第一个参数是`const allocator&`类型，它会拷贝一个allocator保存起来。
