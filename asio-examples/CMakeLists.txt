@@ -5,6 +5,7 @@ add_executable(cpp11to20-chat-chat_server cpp11to20/chat/chat_server.cpp)
 add_executable(cpp11to20-buffers-reference_counted cpp11to20/buffers/reference_counted.cpp)
 add_executable(cpp11to20-buffers-client-for_timeserver cpp11to20/buffers/client_for_timeserver.cpp)
 add_executable(cpp11to20-spawn-parallel_grep cpp11to20/spawn/parallel_grep.cpp)
+add_executable(cpp11to20-fork-daemon cpp11to20/fork/daemon.cpp)
 
 # 下面一堆add_executable用脚本generate.py生成，然后再手动编辑部分
 
