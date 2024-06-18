@@ -176,6 +176,8 @@ public:
     }
     void RegisterService(::google::protobuf::Service* service);
     void Start();
+
+    asio::io_context& Context() { return ioc_; }
 private:
     void StartAccept();
     void ProcessRequest(std::shared_ptr<RpcPackage> pkg_request,
