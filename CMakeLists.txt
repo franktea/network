@@ -13,7 +13,7 @@ FetchContent_Declare(asio
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
 )
-FetchContent_Populate(asio)
+FetchContent_MakeAvailable(asio)
 include_directories(${asio_SOURCE_DIR}/asio/include/)
 
 include(FetchContent)
