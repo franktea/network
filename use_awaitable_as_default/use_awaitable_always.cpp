@@ -32,7 +32,7 @@ awaitable<void> Listen(asio::io_context& ioc, asio::ip::tcp::endpoint ep) {
 
 int main() {
     asio::io_context ioc(1);
-    asio::ip::tcp::endpoint ep {asio::ip::address::from_string("127.0.0.1"), 5555};
+    asio::ip::tcp::endpoint ep {asio::ip::make_address("127.0.0.1"), 5555};
     co_spawn(ioc, Listen(ioc, ep), asio::detached);
     ioc.run();
 }

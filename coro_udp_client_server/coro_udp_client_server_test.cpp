@@ -12,7 +12,7 @@ int main()
 {
     asio::io_context io_context;
     // server监听的地址
-    asio::ip::udp::endpoint ep_server(asio::ip::address::from_string("127.0.0.1"), 9099);
+    asio::ip::udp::endpoint ep_server(asio::ip::make_address("127.0.0.1"), 9099);
 
     const int times = 100000; // 收发次数
 

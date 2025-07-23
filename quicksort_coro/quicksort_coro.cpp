@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <random>
 #include <iostream>
+#include <numeric>
 #include "asio.hpp"
 
 using namespace std::chrono;

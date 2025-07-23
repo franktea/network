@@ -7,10 +7,14 @@ add_executable(general-redis-cli general-client.cpp response_parser.cpp)
 set(EXECUTABLE_OUTPUT_PATH ${BINARY_OUTPUT_DIR})
 
 target_include_directories(mt-redis-cli PRIVATE ${ASIO_INCLUDE_DIR})
-target_link_libraries(mt-redis-cli pthread)
+if(NOT WIN32)
+    target_link_libraries(mt-redis-cli pthread)
+endif()
 
 target_include_directories(general-redis-cli PRIVATE ${ASIO_INCLUDE_DIR})
-target_link_libraries(general-redis-cli pthread)
+if(NOT WIN32)
+    target_link_libraries(general-redis-cli pthread)
+endif()
 
 #target_include_directories(protocol_parser_test PRIVATE ${ASIO_INCLUDE_DIR} ${ut_SINGLE_INCLUDE})
 #target_link_libraries(protocol_parser_test pthread)

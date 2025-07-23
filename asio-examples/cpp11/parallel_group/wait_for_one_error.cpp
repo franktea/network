@@ -9,7 +9,7 @@
 //
 
 #include <asio.hpp>
-#include <asio/experimental/deferred.hpp>
+//#include <asio/experimental/deferred.hpp>
 #include <asio/experimental/parallel_group.hpp>
 #include <iostream>
 

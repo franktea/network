@@ -109,14 +109,14 @@ private:
 int main()
 {
     asio::io_context io(1);
-    asio::ip::tcp::endpoint ep(asio::ip::address::from_string("127.0.0.1"),
+    asio::ip::tcp::endpoint ep(asio::ip::make_address("127.0.0.1"),
             12345);
     Server server(io, ep);
     auto f = [&server]()->awaitable<void>{ co_await server.Start(); };
     asio::co_spawn(io, f(), asio::detached);
-    asio::error_code ec;
-    io.run(ec);
-    if (ec)
+    try{
+        io.run();
+    }catch (asio::error_code& ec)
     {
         std::cerr << "run() met an error, msg:" << ec.message() << "\n";
     }

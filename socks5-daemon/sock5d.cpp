@@ -154,8 +154,8 @@ private:
 
             auto self = shared_from_this();
             // resolve the domain
-            asio::ip::tcp::resolver::query q(dest_host_, dest_port_);
-            resolver_.async_resolve(q,
+            //asio::ip::tcp::resolver::query q(dest_host_, dest_port_);
+            resolver_.async_resolve(dest_host_, dest_port_,
                     [self, this](const asio::error_code& err, asio::ip::tcp::resolver::results_type results)
                     {
                         if(err)

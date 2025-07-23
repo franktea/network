@@ -42,11 +42,12 @@ auto async_echo(asio::io_context& ioc,
 
                     // resolve host and port
                     tcp::resolver resolver(ioc);
-                    tcp::resolver::query q{server, port};
-                    tcp::resolver::iterator ep = co_await resolver.async_resolve(q, asio::deferred);
+                    //tcp::resolver::query q{server, port};
+                    auto ep = co_await resolver.async_resolve(server, port, asio::deferred);
 
                     // connect to the server
-                    co_await s.async_connect(*ep, asio::deferred);
+                    //co_await s.async_connect(*ep, asio::deferred);
+                    co_await asio::async_connect(s, ep, asio::deferred);
 
                     // send message
                     co_await asio::async_write(s, asio::buffer(message), asio::deferred);
@@ -87,7 +88,7 @@ int main() {
                  && async_echo(io, "c++20 coro message 2", "127.0.0.1", "1111", use_awaitable) );
 
                 // 消息收完了，退出io_context
-                io.post([&io](){ io.stop(); });
+                asio::post(io.get_executor(), [&io](){ io.stop(); });
             }, asio::detached);
         
         io.run();
