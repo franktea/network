@@ -1,10 +1,13 @@
 # network
-学习asio的最多、最全、最有用、最容易学会的例子，功能与asio的examples不重叠。
+学习asio的最多、最全、最有用、最容易学会的例子，功能和实现方式与asio的例子尽量不一样。
+
+2022-09-30 master已经升级到c++20，并且只支持c++20，如果不能使用C++20请取tag v1.0_c++11
 
 ```
-git clone --recursive https://github.com/franktea/network.git;
+git clone https://github.com/franktea/network.git;
 cd network;
 mkdir -p build;
+cd build;
 cmake ..;
 make
 ```
@@ -35,3 +38,5 @@ make
 **echo_client** async echo client, which is not included in asio examples
 
 **asio_libcurl** demonstrate how to integrate asio with libcurl, the old example is kinda too old, and has some bugs.
+
+**use_awaitable_as_default** demonstrate how to eliminate writing use_awaitable everytime.

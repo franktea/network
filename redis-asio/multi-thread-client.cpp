@@ -139,7 +139,7 @@ int main()
 {
     asio::io_context io_context;
     asio::ip::tcp::endpoint server_endpoint(
-            asio::ip::address::from_string("127.0.0.1"), 6379);
+            asio::ip::make_address("127.0.0.1"), 6379);
     std::shared_ptr<RedisClient> client = std::make_shared<RedisClient>(
             io_context, server_endpoint);
     client->Start();

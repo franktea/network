@@ -97,7 +97,7 @@ private:
 int main()
 {
     asio::io_context io;
-    asio::ip::tcp::endpoint ep(asio::ip::address::from_string("127.0.0.1"),
+    asio::ip::tcp::endpoint ep(asio::ip::make_address("127.0.0.1"),
             6379);
 
     auto p = std::make_shared<OneShotClient>(io, ep);

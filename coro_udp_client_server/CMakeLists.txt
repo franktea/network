@@ -1,0 +1,10 @@
+project(coro_udp_client_server)
+
+add_executable(coro_udp_client_server_test coro_udp_client_server_test.cpp)
+
+set(EXECUTABLE_OUTPUT_PATH ${BINARY_OUTPUT_DIR})
+
+target_include_directories(coro_udp_client_server_test PRIVATE ${ASIO_INCLUDE_DIR} ${AWAITABLE_DEFAULT_H_DIR})
+if(NOT WIN32)
+    target_link_libraries(coro_udp_client_server_test pthread)
+endif()
