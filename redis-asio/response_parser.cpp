@@ -7,7 +7,6 @@
 
 #include <map>
 #include <functional>
-
 #include "response_parser.h"
 
 std::shared_ptr<AbstractReplyItem> AbstractReplyItem::CreateItem(char c)
